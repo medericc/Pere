@@ -164,83 +164,101 @@ export default function Dashboard() {
       </div>
 
       <form
-        onSubmit={handleSubmit}
-        className="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md mb-10"
-      >
-        <h2 className="text-xl font-semibold mb-4">
-          {isEditing ? "Modifier l'article" : "Créer un nouvel article"}
-        </h2>
-        <input
-          type="text"
-          placeholder="Titre"
-          value={isEditing ? editArticle?.title || "" : newArticle.title}
-          onChange={(e) =>
-            isEditing
-              ? setEditArticle({ ...editArticle!, title: e.target.value })
-              : setNewArticle({ ...newArticle, title: e.target.value })
-          }
-          className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-          required
-        />
-        <textarea
-          placeholder="Contenu"
-          value={isEditing ? editArticle?.content || "" : newArticle.content}
-          onChange={(e) =>
-            isEditing
-              ? setEditArticle({ ...editArticle!, content: e.target.value })
-              : setNewArticle({ ...newArticle, content: e.target.value })
-          }
-          className="w-full p-2 mb-4 border rounded-md min-h-[200px] dark:bg-gray-700 dark:border-gray-600"
-          required
-        />
-       <select
-  value={isEditing ? editArticle?.category || 1 : newArticle.category}
-  onChange={(e) => {
-    const value = parseInt(e.target.value);
-    isEditing
-      ? setEditArticle({ ...editArticle!, category: value })
-      : setNewArticle({ ...newArticle, category: value });
-  }}
-  className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+  onSubmit={handleSubmit}
+  className="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md mb-10"
 >
-  {categories.length > 0 ? (
-    categories.map(category => (
-      <option key={category.id} value={category.id}>
-        {category.name}
-      </option>
-    ))
-  ) : (
-    <option disabled>Aucune catégorie disponible</option>
-  )}
-</select>
+  <h2 className="text-xl font-semibold mb-4">
+    {isEditing ? "Modifier l'article" : "Créer un nouvel article"}
+  </h2>
+  
+  <input
+    type="text"
+    placeholder="Titre"
+    value={isEditing ? editArticle?.title || "" : newArticle.title}
+    onChange={(e) =>
+      isEditing
+        ? setEditArticle({ ...editArticle!, title: e.target.value })
+        : setNewArticle({ ...newArticle, title: e.target.value })
+    }
+    className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+    required
+  />
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                const base64Image = reader.result as string;
-                if (isEditing) {
-                  setEditArticle({ ...editArticle!, thumbnail: base64Image });
-                } else {
-                  setNewArticle({ ...newArticle, thumbnail: base64Image });
-                }
-              };
-              reader.readAsDataURL(file);
-            }
-          }}
-          className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-        >
-          {isEditing ? "Modifier" : "Créer"}
-        </button>
-      </form>
+  <textarea
+    placeholder="Contenu"
+    value={isEditing ? editArticle?.content || "" : newArticle.content}
+    onChange={(e) =>
+      isEditing
+        ? setEditArticle({ ...editArticle!, content: e.target.value })
+        : setNewArticle({ ...newArticle, content: e.target.value })
+    }
+    className="w-full p-2 mb-4 border rounded-md min-h-[200px] dark:bg-gray-700 dark:border-gray-600"
+    required
+  />
+  
+  <select
+    value={isEditing ? editArticle?.category || 1 : newArticle.category}
+    onChange={(e) => {
+      const value = parseInt(e.target.value);
+      isEditing
+        ? setEditArticle({ ...editArticle!, category: value })
+        : setNewArticle({ ...newArticle, category: value });
+    }}
+    className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+  >
+    {categories.length > 0 ? (
+      categories.map(category => (
+        <option key={category.id} value={category.id}>
+          {category.name}
+        </option>
+      ))
+    ) : (
+      <option disabled>Aucune catégorie disponible</option>
+    )}
+  </select>
+
+  {/* Affichage de l'image actuelle si elle existe */}
+  {isEditing && editArticle?.thumbnail && (
+    <div className="mb-4">
+      <img
+        src={editArticle.thumbnail}
+        alt="Image actuelle"
+        className="w-full h-48 object-cover rounded-md"
+      />
+      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Image actuelle</p>
+    </div>
+  )}
+
+  {/* Modification de l'image */}
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64Image = reader.result as string;
+          if (isEditing) {
+            setEditArticle({ ...editArticle!, thumbnail: base64Image });
+          } else {
+            setNewArticle({ ...newArticle, thumbnail: base64Image });
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }}
+    className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+  />
+
+  <button
+    type="submit"
+    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+  >
+    {isEditing ? "Modifier" : "Créer"}
+  </button>
+</form>
+
 
       <div>
         <h2 className="text-2xl font-semibold mb-4">Tous les articles</h2>
