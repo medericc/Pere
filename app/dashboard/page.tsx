@@ -56,11 +56,21 @@ export default function Dashboard() {
         const articlesData = await articlesRes.json();
         const categoriesData = await categoriesRes.json();
   
-        // Vérification des données des catégories
-        console.log('Catégories récupérées:', categoriesData);
-        
-        setArticles(articlesData);
-        setCategories(categoriesData);  // Assurez-vous que categoriesData est un tableau non vide
+        // Vérification des catégories
+        console.log('Catégories récupérées avant aplatissement:', categoriesData);
+  
+        // Aplatir les catégories si elles sont imbriquées
+        const flattenedCategories = categoriesData.flat();
+  
+        // Vérification des catégories aplaties
+        console.log('Catégories récupérées après aplatissement:', flattenedCategories);
+  
+        if (Array.isArray(flattenedCategories)) {
+          setArticles(articlesData);
+          setCategories(flattenedCategories);  // Mettez à jour avec les catégories aplaties
+        } else {
+          throw new Error("Les catégories sont invalides");
+        }
       } catch (error) {
         console.error("Erreur de récupération:", error);
       } finally {
@@ -70,6 +80,7 @@ export default function Dashboard() {
   
     fetchData();
   }, []);
+  
   
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -18,71 +18,61 @@ export async function GET(req) {
 }
 
 // Fonction pour créer un nouvel article
+// Fonction pour créer un nouvel article
 export async function POST(req) {
-  try {
-    const body = await req.json();
-    const { title, content, category, thumbnail, author_username } = body;
-
-    if (!title || !content || !author_username) {
-      return new Response(
-        JSON.stringify({ message: 'Titre, contenu et auteur sont requis' }), 
-        { status: 400 }
-      );
-    }
-
-    // Récupérer l'ID de l'utilisateur à partir du username
-    const [userRows] = await db.query(
-      'SELECT id FROM users WHERE username = ?',
-      [author_username]
-    );
-
-    if (!userRows || userRows.length === 0) {
-      return new Response(
-        JSON.stringify({ message: 'Utilisateur non trouvé' }), 
-        { status: 404 }
-      );
-    }
-
-    const username = userRows[0].id;
-
-    const query = `
-      INSERT INTO articles (title, content, category, thumbnail, username)
-      VALUES (?, ?, ?, ?, ?)
-    `;
-    
-    const [result] = await db.query(query, [
-      title,
-      content,
-      category || null,
-      thumbnail || null,
-      username
-    ]);
-
-    // Récupérer l'article créé avec les informations de l'auteur
-    const [newArticle] = await db.query(`
-      SELECT articles.*, users.username AS author_username
-      FROM articles
-      LEFT JOIN users ON articles.username = users.id
-      WHERE articles.id = ?
-    `, [result.insertId]);
-
-    return new Response(
-      JSON.stringify(newArticle),
-      { 
-        status: 201,
-        headers: {
-          'Content-Type': 'application/json'
-        }
+    try {
+      const body = await req.json();
+      const { title, content, category, thumbnail, author_username } = body;
+  
+      if (!title || !content || !author_username) {
+        return new Response(
+          JSON.stringify({ message: 'Titre, contenu et auteur sont requis' }), 
+          { status: 400 }
+        );
       }
-    );
-  } catch (error) {
-    console.error('Erreur création article:', error);
-    return new Response(
-      JSON.stringify({ message: 'Erreur lors de la création de l\'article' }), 
-      { status: 500 }
-    );
+  
+      // Ici, pas besoin de récupérer l'ID de l'utilisateur à partir du username,
+      // vous allez simplement utiliser l'username tel quel.
+  
+      const query = `
+        INSERT INTO articles (title, content, category_id, image, username)
+        VALUES (?, ?, ?, ?, ?)
+      `;
+      
+      const [result] = await db.query(query, [
+        title,
+        content,
+        category || null,
+        thumbnail || null,
+        author_username // Utilisation du username directement
+      ]);
+  
+      // Récupérer l'article créé avec les informations de l'auteur
+      const [newArticle] = await db.query(`
+        SELECT articles.*, users.username AS author_username
+        FROM articles
+        LEFT JOIN users ON articles.username = users.username
+        WHERE articles.id = ?
+      `, [result.insertId]);
+  
+      return new Response(
+        JSON.stringify(newArticle),
+        { 
+          status: 201,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+    } catch (error) {
+      console.error('Erreur création article:', error);
+      return new Response(
+        JSON.stringify({ message: 'Erreur lors de la création de l\'article' }), 
+        { status: 500 }
+      );
+    }
   }
-}
+  
 
 // Fonction pour modifier un article
 export async function PUT(req) {
