@@ -1,5 +1,4 @@
-import db from '../../../db/db.js'; // Assurez-vous que db.js utilise un export ESModule
-import { verifyUserRole } from '../middleware/auth.js'; // Middleware pour vérifier les rôles
+import db from '../../../db/db.js';
 
 // Fonction pour récupérer tous les articles
 export async function GET(req) {
@@ -7,7 +6,8 @@ export async function GET(req) {
     const query = `
       SELECT articles.*, users.username AS author_username
       FROM articles
-      LEFT JOIN users ON articles.username = users.id
+      LEFT JOIN users ON articles.author_id = users.id
+      ORDER BY articles.created_at DESC
     `;
     const results = await db.query(query);
     return new Response(JSON.stringify(results), { status: 200 });
@@ -19,84 +19,144 @@ export async function GET(req) {
 
 // Fonction pour créer un nouvel article
 export async function POST(req) {
-    try {
-      const userRole = req.user?.role || null;
-      if (!userRole || !['admin', 'writer'].includes(userRole)) {
-        return new Response(JSON.stringify({ message: 'Accès interdit' }), { status: 403 });
-      }
-  
-      const { title, content, username, category_id } = await req.json();
-  
-      const query = `
-        INSERT INTO articles (title, content, username, category_id)
-        VALUES (?, ?, ?, ?)
-      `;
-      const result = await db.query(query, [title, content, username, category_id]);
-  
-      return new Response(
-        JSON.stringify({ message: 'Article créé', articleId: result.insertId }),
-        { status: 201 }
-      );
-    } catch (error) {
-      console.error(error);
-      return new Response(JSON.stringify({ message: 'Erreur serveur' }), { status: 500 });
-    }
-  }
-  
-
-// Fonction pour modifier un article
-export async function PUT(req, { params }) {
   try {
-    const articleId = params.id;
-    const userRole = req.user?.role || null;
+    const body = await req.json();
+    const { title, content, category, thumbnail, author_username } = body;
 
-    if (!userRole || !['admin', 'writer'].includes(userRole)) {
-      return new Response(JSON.stringify({ message: 'Accès interdit' }), { status: 403 });
+    if (!title || !content || !author_username) {
+      return new Response(
+        JSON.stringify({ message: 'Titre, contenu et auteur sont requis' }), 
+        { status: 400 }
+      );
     }
 
-    const { title, content, category_id } = await req.json();
+    // Récupérer l'ID de l'utilisateur à partir du username
+    const [userRows] = await db.query(
+      'SELECT id FROM users WHERE username = ?',
+      [author_username]
+    );
+
+    if (!userRows || userRows.length === 0) {
+      return new Response(
+        JSON.stringify({ message: 'Utilisateur non trouvé' }), 
+        { status: 404 }
+      );
+    }
+
+    const author_id = userRows[0].id;
 
     const query = `
-      UPDATE articles
-      SET title = ?, content = ?, category_id = ?
-      WHERE id = ? AND (username = ? OR ? = 'admin')
+      INSERT INTO articles (title, content, category, thumbnail, author_id)
+      VALUES (?, ?, ?, ?, ?)
     `;
-    const result = await db.query(query, [title, content, category_id, articleId, req.user.id, userRole]);
+    
+    const [result] = await db.query(query, [
+      title,
+      content,
+      category || null,
+      thumbnail || null,
+      author_id
+    ]);
 
-    if (result.affectedRows === 0) {
-      return new Response(JSON.stringify({ message: 'Article non trouvé ou accès interdit' }), { status: 404 });
+    // Récupérer l'article créé avec les informations de l'auteur
+    const [newArticle] = await db.query(`
+      SELECT articles.*, users.username AS author_username
+      FROM articles
+      LEFT JOIN users ON articles.author_id = users.id
+      WHERE articles.id = ?
+    `, [result.insertId]);
+
+    return new Response(
+      JSON.stringify(newArticle),
+      { 
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+  } catch (error) {
+    console.error('Erreur création article:', error);
+    return new Response(
+      JSON.stringify({ message: 'Erreur lors de la création de l\'article' }), 
+      { status: 500 }
+    );
+  }
+}
+
+// Fonction pour modifier un article
+export async function PUT(req) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
+      return new Response(
+        JSON.stringify({ message: 'ID de l\'article requis' }), 
+        { status: 400 }
+      );
     }
 
-    return new Response(JSON.stringify({ message: 'Article mis à jour' }), { status: 200 });
+    const { title, content, category, thumbnail } = await req.json();
+
+    const query = `
+      UPDATE articles 
+      SET title = ?, content = ?, category = ?, thumbnail = ?
+      WHERE id = ?
+    `;
+    
+    await db.query(query, [title, content, category, thumbnail, id]);
+
+    // Récupérer l'article mis à jour
+    const [updatedArticle] = await db.query(`
+      SELECT articles.*, users.username AS author_username
+      FROM articles
+      LEFT JOIN users ON articles.author_id = users.id
+      WHERE articles.id = ?
+    `, [id]);
+
+    return new Response(
+      JSON.stringify(updatedArticle),
+      { 
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ message: 'Erreur serveur' }), { status: 500 });
+    console.error('Erreur modification article:', error);
+    return new Response(
+      JSON.stringify({ message: 'Erreur lors de la modification de l\'article' }), 
+      { status: 500 }
+    );
   }
 }
 
 // Fonction pour supprimer un article
-export async function DELETE(req, { params }) {
+export async function DELETE(req) {
   try {
-    const articleId = params.id;
-    const userRole = req.user?.role || null;
-
-    if (!userRole || !['admin', 'writer'].includes(userRole)) {
-      return new Response(JSON.stringify({ message: 'Accès interdit' }), { status: 403 });
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    
+    if (!id) {
+      return new Response(
+        JSON.stringify({ message: 'ID de l\'article requis' }), 
+        { status: 400 }
+      );
     }
 
-    const query = `
-      DELETE FROM articles
-      WHERE id = ? AND (username = ? OR ? = 'admin')
-    `;
-    const result = await db.query(query, [articleId, req.user.id, userRole]);
+    await db.query('DELETE FROM articles WHERE id = ?', [id]);
 
-    if (result.affectedRows === 0) {
-      return new Response(JSON.stringify({ message: 'Article non trouvé ou accès interdit' }), { status: 404 });
-    }
-
-    return new Response(JSON.stringify({ message: 'Article supprimé' }), { status: 200 });
+    return new Response(
+      JSON.stringify({ message: 'Article supprimé avec succès' }),
+      { status: 200 }
+    );
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ message: 'Erreur serveur' }), { status: 500 });
+    console.error('Erreur suppression article:', error);
+    return new Response(
+      JSON.stringify({ message: 'Erreur lors de la suppression de l\'article' }), 
+      { status: 500 }
+    );
   }
 }
