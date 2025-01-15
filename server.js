@@ -1,24 +1,25 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const app = express();
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 // Importer les routes
-const authRoutes = require('./api/auth/route');
-const articleRoutes = require('./api/articles/route');
+import authRoutes from './app/api/auth/route.js';
+import articleRoutes from './app/api/articles/route.js';
 
 // Middleware
-const authenticateToken = require('./api/middleware/auth');
+import authenticateToken from './app/api/middleware/auth.js';
+
+const app = express();
 
 // Middleware pour le corps de la requête
 app.use(bodyParser.json());
 app.use(cors());
 
 // Routes publiques
-app.use('/api/auth', authRoutes);  // Route pour l'authentification
+app.use('/app/api/auth', authRoutes); // Route pour l'authentification
 
 // Routes protégées, avec vérification de token
-app.use('/api/articles', authenticateToken, articleRoutes);  // Route pour gérer les articles
+app.use('/app/api/articles', authenticateToken, articleRoutes); // Route pour gérer les articles
 
 // Démarrer le serveur
 const PORT = 5000;

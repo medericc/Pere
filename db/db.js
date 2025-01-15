@@ -1,18 +1,10 @@
-const mysql = require('mysql2');
+import mysql from 'mysql2/promise'; // Importation avec le sous-module promise
 
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: 'localhost',
   user: 'root', // Remplace par ton utilisateur MySQL
   password: '', // Remplace par ton mot de passe MySQL
-  database: 'paroisse'
+  database: 'paroisse',
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Erreur de connexion à la base de données :', err);
-    return;
-  }
-  console.log('Connecté à la base de données MySQL');
-});
-
-module.exports = db;
+export default db;

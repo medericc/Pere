@@ -1,61 +1,102 @@
-const express = require('express');
-const db = require('../../../db');
-const router = express.Router();
+import db from '../../../db/db.js'; // Assurez-vous que db.js utilise un export ESModule
+import { verifyUserRole } from '../middleware/auth.js'; // Middleware pour vérifier les rôles
 
-// Middleware pour vérifier les rôles
-const checkRole = (roles) => (req, res, next) => {
-    if (!req.user) return res.status(401).send('Authentification requise');
-    const userRole = req.user.role;
-    if (!roles.includes(userRole)) return res.status(403).send('Accès interdit');
-    next();
-  };
-  
+// Fonction pour récupérer tous les articles
+export async function GET(req) {
+  try {
+    const query = `
+      SELECT articles.*, users.username AS author_username
+      FROM articles
+      LEFT JOIN users ON articles.username = users.id
+    `;
+    const results = await db.query(query);
+    return new Response(JSON.stringify(results), { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: 'Erreur serveur' }), { status: 500 });
+  }
+}
 
-// Route pour récupérer tous les articles
-router.get('/', (req, res) => {
-  db.query('SELECT * FROM articles', (err, results) => {
-    if (err) return res.status(500).send(err);
-    res.json(results);
-  });
-});
-
-// Route pour créer un nouvel article
-router.post('/', checkRole(['admin', 'writer']), (req, res) => {
-    const { title, content, username, category_id } = req.body;
-    db.query(
-      'INSERT INTO articles (title, content, username, category_id) VALUES (?, ?, ?, ?)',
-      [title, content, username, category_id],
-      (err, results) => {
-        if (err) return res.status(500).send(err);
-        res.status(201).json({ message: 'Article créé', articleId: results.insertId });
+// Fonction pour créer un nouvel article
+export async function POST(req) {
+    try {
+      const userRole = req.user?.role || null;
+      if (!userRole || !['admin', 'writer'].includes(userRole)) {
+        return new Response(JSON.stringify({ message: 'Accès interdit' }), { status: 403 });
       }
-    );
-  });
+  
+      const { title, content, username, category_id } = await req.json();
+  
+      const query = `
+        INSERT INTO articles (title, content, username, category_id)
+        VALUES (?, ?, ?, ?)
+      `;
+      const result = await db.query(query, [title, content, username, category_id]);
+  
+      return new Response(
+        JSON.stringify({ message: 'Article créé', articleId: result.insertId }),
+        { status: 201 }
+      );
+    } catch (error) {
+      console.error(error);
+      return new Response(JSON.stringify({ message: 'Erreur serveur' }), { status: 500 });
+    }
+  }
   
 
-// Route pour modifier un article (uniquement pour l'auteur ou admin)
-router.put('/:id', checkRole(['admin', 'writer']), (req, res) => {
-  const articleId = req.params.id;
-  const { title, content, category_name } = req.body;
-  db.query(
-    'UPDATE articles SET title = ?, content = ?, category_name = ? WHERE id = ? AND (author = ? OR ? = "admin")',
-    [title, content, category_name, articleId, req.user.id, req.user.role],
-    (err, results) => {
-      if (err) return res.status(500).send(err);
-      if (results.affectedRows === 0) return res.status(404).send('Article non trouvé ou accès interdit');
-      res.json({ message: 'Article mis à jour' });
+// Fonction pour modifier un article
+export async function PUT(req, { params }) {
+  try {
+    const articleId = params.id;
+    const userRole = req.user?.role || null;
+
+    if (!userRole || !['admin', 'writer'].includes(userRole)) {
+      return new Response(JSON.stringify({ message: 'Accès interdit' }), { status: 403 });
     }
-  );
-});
 
-// Route pour supprimer un article
-router.delete('/:id', checkRole(['admin']), (req, res) => {
-  const articleId = req.params.id;
-  db.query('DELETE FROM articles WHERE id = ? AND (author = ? OR ? = "admin")', [articleId, req.user.id, req.user.role], (err, results) => {
-    if (err) return res.status(500).send(err);
-    if (results.affectedRows === 0) return res.status(404).send('Article non trouvé ou accès interdit');
-    res.json({ message: 'Article supprimé' });
-  });
-});
+    const { title, content, category_id } = await req.json();
 
-module.exports = router;
+    const query = `
+      UPDATE articles
+      SET title = ?, content = ?, category_id = ?
+      WHERE id = ? AND (username = ? OR ? = 'admin')
+    `;
+    const result = await db.query(query, [title, content, category_id, articleId, req.user.id, userRole]);
+
+    if (result.affectedRows === 0) {
+      return new Response(JSON.stringify({ message: 'Article non trouvé ou accès interdit' }), { status: 404 });
+    }
+
+    return new Response(JSON.stringify({ message: 'Article mis à jour' }), { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: 'Erreur serveur' }), { status: 500 });
+  }
+}
+
+// Fonction pour supprimer un article
+export async function DELETE(req, { params }) {
+  try {
+    const articleId = params.id;
+    const userRole = req.user?.role || null;
+
+    if (!userRole || !['admin', 'writer'].includes(userRole)) {
+      return new Response(JSON.stringify({ message: 'Accès interdit' }), { status: 403 });
+    }
+
+    const query = `
+      DELETE FROM articles
+      WHERE id = ? AND (username = ? OR ? = 'admin')
+    `;
+    const result = await db.query(query, [articleId, req.user.id, userRole]);
+
+    if (result.affectedRows === 0) {
+      return new Response(JSON.stringify({ message: 'Article non trouvé ou accès interdit' }), { status: 404 });
+    }
+
+    return new Response(JSON.stringify({ message: 'Article supprimé' }), { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ message: 'Erreur serveur' }), { status: 500 });
+  }
+}
