@@ -1,18 +1,19 @@
-"use client";
-
+"use client"
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
 
 const links = [{ displayName: "Blog", herf: "/blog" }];
 
-export default function Header() {
+interface HeaderProps {
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function Header({ setShowModal }: HeaderProps) {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
-  const [showModal, setShowModal] = useState(false);
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -64,24 +65,6 @@ export default function Header() {
           </button>
         </div>
       </header>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white dark:bg-[#242535] p-8 rounded-md shadow-lg w-[90%] max-w-md">
-            <h2 className="text-2xl mb-4 font-bold">Welcome Modal</h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-6">
-              You have clicked on the logo.
-            </p>
-            <button
-              onClick={() => setShowModal(false)}
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

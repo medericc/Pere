@@ -1,11 +1,10 @@
-"use client";
-
+"use client"
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Image from "next/image";
 import Link from "next/link";
 import { posts } from "@/posts";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthContext";
 
@@ -15,6 +14,7 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const { user, login } = useAuth();
   const router = useRouter();
+  const pathname = usePathname(); // Pour vérifier la route actuelle
 
   const handleLogin = () => {
     if (username && password) {
@@ -26,7 +26,6 @@ export default function Home() {
   };
 
   const closeModal = (e) => {
-    
     if (e.target.id === "modal-overlay") {
       setShowModal(false);
     }
@@ -46,10 +45,9 @@ export default function Home() {
 
   return (
     <div>
-      <Header />
+      <Header setShowModal={setShowModal} /> {/* Pass setShowModal as prop */}
       <div className="mb-20 px-5 md:px-0">
         <div
-          onClick={() => setShowModal(true)} // Un seul clic ouvre la modale
           className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer"
         >
           <Image src={"/images/hero.png"} alt="hero image" sizes="100vh" fill />
@@ -104,27 +102,44 @@ export default function Home() {
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
         >
           <div className="bg-white dark:bg-[#242535] p-8 rounded-md shadow-lg w-[90%] max-w-md">
-            <h2 className="text-2xl mb-4 font-bold">Login</h2>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-2 mb-4 border rounded-md dark:bg-gray-800 dark:text-white"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 mb-6 border rounded-md dark:bg-gray-800 dark:text-white"
-            />
-            <button
-              onClick={handleLogin}
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
-            >
-              Login
-            </button>
+            {user ? (
+              <>
+                <h2 className="text-2xl mb-4 font-bold">You are logged in!</h2>
+                <p className="text-lg mb-6">
+                  Do you want to go to your dashboard?
+                </p>
+                <button
+                  onClick={() => router.push("/dashboard")}
+                  className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+                >
+                  Go to Dashboard
+                </button>
+              </>
+            ) : (
+              <>
+                <h2 className="text-2xl mb-4 font-bold">Login</h2>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-2 mb-4 border rounded-md dark:bg-gray-800 dark:text-white"
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-2 mb-6 border rounded-md dark:bg-gray-800 dark:text-white"
+                />
+                <button
+                  onClick={handleLogin}
+                  className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
+                >
+                  Login
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
