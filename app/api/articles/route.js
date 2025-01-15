@@ -106,7 +106,7 @@ export async function PUT(req) {
 
     const query = `
       UPDATE articles 
-      SET title = ?, content = ?, category = ?, thumbnail = ?
+      SET title = ?, content = ?, category_id = ?, image = ?
       WHERE id = ?
     `;
     
@@ -116,7 +116,7 @@ export async function PUT(req) {
     const [updatedArticle] = await db.query(`
       SELECT articles.*, users.username AS author_username
       FROM articles
-      LEFT JOIN users ON articles.username = users.id
+     LEFT JOIN users ON articles.username = users.username
       WHERE articles.id = ?
     `, [id]);
 
