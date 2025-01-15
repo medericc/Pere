@@ -20,7 +20,7 @@ type Article = {
   title: string;
   content: string;
   thumbnail?: string;
-  category?: string;
+  category?: number;
   author_username: string;
   created_at: string;
 };

@@ -6,8 +6,8 @@ export async function GET(req) {
     const query = `
       SELECT articles.*, users.username AS author_username
       FROM articles
-      LEFT JOIN users ON articles.author_id = users.id
-      ORDER BY articles.created_at DESC
+      LEFT JOIN users ON articles.username = users.id
+      ORDER BY articles.published_at DESC
     `;
     const results = await db.query(query);
     return new Response(JSON.stringify(results), { status: 200 });
@@ -43,10 +43,10 @@ export async function POST(req) {
       );
     }
 
-    const author_id = userRows[0].id;
+    const username = userRows[0].id;
 
     const query = `
-      INSERT INTO articles (title, content, category, thumbnail, author_id)
+      INSERT INTO articles (title, content, category, thumbnail, username)
       VALUES (?, ?, ?, ?, ?)
     `;
     
@@ -55,14 +55,14 @@ export async function POST(req) {
       content,
       category || null,
       thumbnail || null,
-      author_id
+      username
     ]);
 
     // Récupérer l'article créé avec les informations de l'auteur
     const [newArticle] = await db.query(`
       SELECT articles.*, users.username AS author_username
       FROM articles
-      LEFT JOIN users ON articles.author_id = users.id
+      LEFT JOIN users ON articles.username = users.id
       WHERE articles.id = ?
     `, [result.insertId]);
 
@@ -111,7 +111,7 @@ export async function PUT(req) {
     const [updatedArticle] = await db.query(`
       SELECT articles.*, users.username AS author_username
       FROM articles
-      LEFT JOIN users ON articles.author_id = users.id
+      LEFT JOIN users ON articles.username = users.id
       WHERE articles.id = ?
     `, [id]);
 
