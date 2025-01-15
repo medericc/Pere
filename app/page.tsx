@@ -67,8 +67,20 @@ export default function Home() {
     async function fetchArticles() {
       try {
         const res = await fetch("/api/articles");
-        if (!res.ok) throw new Error("Erreur lors de la récupération des articles.");
-        const data: Article[] = await res.json();
+  
+        if (!res.ok) {
+          throw new Error("Erreur lors de la récupération des articles.");
+        }
+  
+        // Vérifiez si la réponse est vide
+        const textResponse = await res.text();
+        if (!textResponse) {
+          throw new Error("Aucune donnée reçue.");
+        }
+  
+        // Si la réponse contient des données, essayez de la parser en JSON
+        const data = JSON.parse(textResponse);
+        console.log(data); // Vérifiez ce que vous obtenez ici
         setArticles(data);
       } catch (error) {
         console.error("Erreur:", error);
@@ -76,9 +88,11 @@ export default function Home() {
         setLoading(false);
       }
     }
-
+  
     fetchArticles();
   }, []);
+  
+  
 
   // Fermeture de la modal avec Escape
   useEffect(() => {
@@ -119,32 +133,24 @@ export default function Home() {
 
       {/* Liste des articles */}
       <div className="grid grid-cols-1 md:grid-cols-3 place-items-center gap-5">
-        {articles.map((article) => (
-          <Link
-            key={article.id}
-            href={`/blog/${article.id}`}
-            className="p-4 group rounded-lg border w-[392px] border-gray-200 dark:border-gray-700"
-          >
-            <div className="h-60 w-full relative overflow-hidden rounded-md object-cover group-hover:scale-105 duration-300 transition-all">
-              <Image
-                src={article.thumbnail || "/placeholder.jpg"}
-                alt={`${article.title} - thumbnail`}
-                sizes="100vh"
-                fill
-              />
-            </div>
-            <p className="text-sm bg-gray-100 dark:bg-gray-700/95 text-blue-700 dark:text-blue-500 font-semibold my-4 w-fit px-2 py-1 rounded-sm">
-              {article.category || "Non classé"}
-            </p>
-            <h2 className="text-2xl leading-7 font-bold py-1 line-clamp-2">
-              {article.title}
-            </h2>
-            <div className="text-gray-500 flex text-base space-x-10 py-3">
-              <div>{article.author_username || "Auteur inconnu"}</div>
-              <div>{new Date(article.created_at).toLocaleDateString()}</div>
-            </div>
-          </Link>
-        ))}
+      {articles.map((article) => (
+  <Link key={article.id} href={`/blog/${article.id}`} className="p-4 group rounded-lg border w-[392px] border-gray-200 dark:border-gray-700">
+    <div className="h-60 w-full relative overflow-hidden rounded-md object-cover group-hover:scale-105 duration-300 transition-all">
+      <Image src={article.thumbnail || "/placeholder.jpg"} alt={`${article.title} - thumbnail`} layout="fill" />
+    </div>
+    <p className="text-sm bg-gray-100 dark:bg-gray-700/95 text-blue-700 dark:text-blue-500 font-semibold my-4 w-fit px-2 py-1 rounded-sm">
+      {article.category || "Non classé"}
+    </p>
+    <h2 className="text-2xl leading-7 font-bold py-1 line-clamp-2">
+      {article.title}
+    </h2>
+    <div className="text-gray-500 flex text-base space-x-10 py-3">
+      <div>{article.author_username || "Auteur inconnu"}</div>
+      <div>{new Date(article.created_at).toLocaleDateString()}</div>
+    </div>
+  </Link>
+))}
+
       </div>
 
       <Footer />
