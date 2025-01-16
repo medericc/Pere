@@ -7,28 +7,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthContext";
+import { useCategoryContext } from "@/components/AuthContext"; // Utiliser le bon contexte
 
 interface Article {
   id: number;
   title: string;
   content: string;
   thumbnail?: string;
-  category?: string;
+  category_id: number;
   author_username?: string;
   created_at: string;
 }
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
-  const [identifier, setIdentifier] = useState(""); // Changed from username to identifier
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
-
   const { user, login } = useAuth();
   const router = useRouter();
 
-  // Updated login handler
+  // Utiliser le contexte des catégories
+  const { categories } = useCategoryContext();
+  const flattenedCategories = categories.flat();
+
+  console.log("eeeeeeeeeee",flattenedCategories)
   const handleLogin = async () => {
     if (identifier && password) {
       try {
@@ -41,7 +45,7 @@ export default function Home() {
 
         if (res.ok) {
           const data = await res.json();
-          login(data); // Login with user data
+          login(data);
           router.push("/dashboard");
         } else {
           alert("Login failed: Incorrect email/username or password.");
@@ -55,32 +59,18 @@ export default function Home() {
     }
   };
 
-  // Fonction pour fermer la modal
   const closeModal = (e: React.MouseEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).id === "modal-overlay") {
       setShowModal(false);
     }
   };
 
-  // Appel à l'API pour récupérer les articles
   useEffect(() => {
     async function fetchArticles() {
       try {
         const res = await fetch("/api/articles");
-  
-        if (!res.ok) {
-          throw new Error("Erreur lors de la récupération des articles.");
-        }
-  
-        // Vérifiez si la réponse est vide
-        const textResponse = await res.text();
-        if (!textResponse) {
-          throw new Error("Aucune donnée reçue.");
-        }
-  
-        // Si la réponse contient des données, essayez de la parser en JSON
-        const data = JSON.parse(textResponse);
-        console.log(data); // Vérifiez ce que vous obtenez ici
+        if (!res.ok) throw new Error("Erreur lors de la récupération des articles.");
+        const data = await res.json();
         setArticles(data);
       } catch (error) {
         console.error("Erreur:", error);
@@ -88,13 +78,9 @@ export default function Home() {
         setLoading(false);
       }
     }
-  
     fetchArticles();
   }, []);
-  
-  
 
-  // Fermeture de la modal avec Escape
   useEffect(() => {
     const closeOnEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -114,8 +100,6 @@ export default function Home() {
   return (
     <div>
       <Header setShowModal={setShowModal} />
-
-      {/* Section Hero */}
       <div className="mb-20 px-5 md:px-0">
         <div className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer">
           <Image src="/images/hero.png" alt="Hero image" sizes="100vh" fill />
@@ -130,32 +114,38 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* Liste des articles */}
       <div className="grid grid-cols-1 md:grid-cols-3 place-items-center gap-5">
-      {articles.map((article) => (
-  <Link key={article.id} href={`/blog/${article.id}`} className="p-4 group rounded-lg border w-[392px] border-gray-200 dark:border-gray-700">
-    <div className="h-60 w-full relative overflow-hidden rounded-md object-cover group-hover:scale-105 duration-300 transition-all">
-      <Image src={article.thumbnail || "/placeholder.jpg"} alt={`${article.title} - thumbnail`} layout="fill" />
-    </div>
-    <p className="text-sm bg-gray-100 dark:bg-gray-700/95 text-blue-700 dark:text-blue-500 font-semibold my-4 w-fit px-2 py-1 rounded-sm">
-      {article.category || "Non classé"}
-    </p>
-    <h2 className="text-2xl leading-7 font-bold py-1 line-clamp-2">
-      {article.title}
-    </h2>
-    <div className="text-gray-500 flex text-base space-x-10 py-3">
-      <div>{article.author_username || "Auteur inconnu"}</div>
-      <div>{new Date(article.created_at).toLocaleDateString()}</div>
-    </div>
-  </Link>
-))}
-
+        {articles.map((article) => {
+      const category = flattenedCategories.find((cat) => cat.id === article.category_id);
+      const categoryName = category ? category.name : "Non classé";
+        return (
+            <Link
+              key={article.id}
+              href={`/blog/${article.id}`}
+              className="p-4 group rounded-lg border w-[392px] border-gray-200 dark:border-gray-700"
+            >
+              <div className="h-60 w-full relative overflow-hidden rounded-md object-cover group-hover:scale-105 duration-300 transition-all">
+                <Image
+                  src={article.thumbnail || "/placeholder.jpg"}
+                  alt={`${article.title} - thumbnail`}
+                  layout="fill"
+                />
+              </div>
+              <p className="text-sm bg-gray-100 dark:bg-gray-700/95 text-blue-700 dark:text-blue-500 font-semibold my-4 w-fit px-2 py-1 rounded-sm">
+                {categoryName}
+              </p>
+              <h2 className="text-2xl leading-7 font-bold py-1 line-clamp-2">
+                {article.title}
+              </h2>
+              <div className="text-gray-500 flex text-base space-x-10 py-3">
+                <div>{article.author_username || "Auteur inconnu"}</div>
+                <div>{new Date(article.created_at).toLocaleDateString()}</div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
-
       <Footer />
-
-      {/* Modal */}
       {showModal && (
         <div
           id="modal-overlay"

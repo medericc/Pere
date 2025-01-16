@@ -1,5 +1,11 @@
 import db from '../../../db/db.js';
 
+
+
+
+
+
+
 // Fonction pour récupérer tous les articles
 export async function GET(req) {
     try {

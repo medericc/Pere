@@ -2,12 +2,28 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-// Définition des types pour les informations utilisateur et les articles
+// Définition des types pour les informations utilisateur, articles et catégories
 interface User {
   username: string;
   email: string;
   role: string;
 }
+
+type Category = {
+  id: number;
+  name: string;
+};
+
+type Article = {
+  id: number;
+  title: string;
+  content: string;
+  thumbnail?: string;
+  category?: number; // Utilisation d'un ID ici
+  categoryName?: string; // Ajout d'un champ pour le nom
+  author_username: string;
+  created_at: string;
+};
 
 interface AuthContextType {
   user: User | null;
@@ -15,24 +31,20 @@ interface AuthContextType {
   logout: () => void;
 }
 
-type Article = {
-  id: number;
-  title: string;
-  content: string;
-  thumbnail?: string;
-  category?: number;
-  author_username: string;
-  created_at: string;
-};
-
 type ArticleContextType = {
   articles: Article[];
   setArticles: React.Dispatch<React.SetStateAction<Article[]>>;
 };
 
+type CategoryContextType = {
+  categories: Category[];
+  setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+};
+
 // Création des contextes
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
+const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
 
 // Fournisseur pour le contexte d'authentification avec persistance
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -50,7 +62,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   }, []);
-  
 
   const login = (userInfo: User) => {
     setUser(userInfo);
@@ -89,7 +100,6 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
       }
     }
   }, []);
-  
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -104,7 +114,25 @@ export const ArticleProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Hook pour utiliser le contexte d'authentification
+// Fournisseur pour le contexte des catégories avec persistance
+export const CategoryProvider = ({ children }: { children: ReactNode }) => {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    fetch("/api/categories") // Remplacez par votre endpoint
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.error("Erreur lors du chargement des catégories :", err));
+  }, []);
+
+  return (
+    <CategoryContext.Provider value={{ categories, setCategories }}>
+      {children}
+    </CategoryContext.Provider>
+  );
+};
+
+// Hooks pour utiliser les contextes
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -113,7 +141,6 @@ export const useAuth = () => {
   return context;
 };
 
-// Hook pour utiliser le contexte des articles
 export const useArticleContext = () => {
   const context = useContext(ArticleContext);
   if (!context) {
@@ -122,14 +149,24 @@ export const useArticleContext = () => {
   return context;
 };
 
+export const useCategoryContext = () => {
+  const context = useContext(CategoryContext);
+  if (!context) {
+    throw new Error("useCategoryContext must be used within a CategoryProvider");
+  }
+  return context;
+};
+
 // Fournisseur combiné pour simplifier l'utilisation
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AuthProvider>
-      <ArticleProvider>{children}</ArticleProvider>
+      <ArticleProvider>
+        <CategoryProvider>{children}</CategoryProvider>
+      </ArticleProvider>
     </AuthProvider>
   );
 };
 
-// Exportation du type Article
-export type { Article };
+// Exportation des types
+export type { Article, Category };

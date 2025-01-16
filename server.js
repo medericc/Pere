@@ -9,20 +9,21 @@ import articleRoutes from './app/api/articles/route.js';
 // Middleware
 import authenticateToken from './app/api/middleware/auth.js';
 
+// Initialiser l'application Express
 const app = express();
 
-// Middleware pour le corps de la requête
-app.use(bodyParser.json());
-app.use(cors());
+// Utiliser les middlewares
+app.use(bodyParser.json()); // Pour traiter les requêtes avec un corps JSON
+app.use(cors()); // Pour permettre les requêtes cross-origin
 
-// Routes publiques
-app.use('/app/api/auth', authRoutes); // Route pour l'authentification
+// Routes publiques (sans authentification)
+app.use('/app/api/auth', authRoutes);
 
-// Routes protégées, avec vérification de token
-app.use('/app/api/articles', authenticateToken, articleRoutes); // Route pour gérer les articles
+// Routes protégées par un middleware d'authentification
+app.use('/app/api/articles', authenticateToken, articleRoutes);
 
 // Démarrer le serveur
 const PORT = 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Le serveur est démarré sur le port ${PORT}`);
 });
