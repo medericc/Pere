@@ -56,7 +56,7 @@ export async function POST(req) {
       // vous allez simplement utiliser l'username tel quel.
   
       const query = `
-        INSERT INTO articles (title, content, category_id, image, username)
+        INSERT INTO articles (title, content, category_id, image_path, username)
         VALUES (?, ?, ?, ?, ?)
       `;
       
@@ -112,7 +112,7 @@ export async function PUT(req) {
 
     const query = `
       UPDATE articles 
-      SET title = ?, content = ?, category_id = ?, image = ?
+      SET title = ?, content = ?, category_id = ?, image_path = ?
       WHERE id = ?
     `;
     

@@ -82,6 +82,37 @@ export default function Dashboard() {
   }, []);
   
   
+// Modification de la gestion du formulaire pour envoyer l'image en fichier
+
+const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (file) {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("Erreur lors de l'upload de l'image");
+      }
+
+      const result = await res.json();
+      const imageUrl = result.imageUrl; // L'URL de l'image renvoyée par le backend
+
+      if (isEditing) {
+        setEditArticle({ ...editArticle!, thumbnail: imageUrl });
+      } else {
+        setNewArticle({ ...newArticle, thumbnail: imageUrl });
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'upload de l'image:", error);
+    }
+  }
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,25 +262,12 @@ export default function Dashboard() {
 
   {/* Modification de l'image */}
   <input
-    type="file"
-    accept="image/*"
-    onChange={(e) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64Image = reader.result as string;
-          if (isEditing) {
-            setEditArticle({ ...editArticle!, thumbnail: base64Image });
-          } else {
-            setNewArticle({ ...newArticle, thumbnail: base64Image });
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-    }}
-    className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-  />
+  type="file"
+  accept="image/*"
+  onChange={handleImageUpload}
+  className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+/>
+
 
   <button
     type="submit"
@@ -268,7 +286,7 @@ export default function Dashboard() {
               key={article.id}
               className="bg-white dark:bg-gray-700 p-4 rounded-md shadow-md"
             >
-              {article.thumbnail && (
+            {article.thumbnail && (
                 <div className="relative h-48 mb-4 rounded-md overflow-hidden">
                   <img
                     src={article.thumbnail}
@@ -279,7 +297,7 @@ export default function Dashboard() {
               )}
               <h3 className="text-xl font-bold mb-2">{article.title}</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Auteur : {article.author_username}
+                Auteur : {article.author_username || "Auteur inconnu"}
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 Catégorie : {getCategoryName(article.category)}
