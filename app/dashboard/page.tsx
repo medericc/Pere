@@ -113,6 +113,16 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   }
 };
+const flattenCategories = (categories: any[]): Category[] => {
+  return categories.reduce((acc: Category[], category: any) => {
+    const { id, name, subcategories } = category;
+    acc.push({ id, name });
+    if (Array.isArray(subcategories)) {
+      acc = acc.concat(flattenCategories(subcategories));
+    }
+    return acc;
+  }, []);
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
