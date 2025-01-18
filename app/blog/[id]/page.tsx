@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -15,12 +16,14 @@ interface Article {
 export default function ArticlePage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const { id } = useParams();
   const router = useRouter();
 
   useEffect(() => {
     async function fetchArticle() {
       if (!id) return;
+
       try {
         const res = await fetch(`/api/articles/${id}`);
         if (!res.ok) throw new Error("Failed to fetch article");
@@ -32,8 +35,15 @@ export default function ArticlePage() {
         setLoading(false);
       }
     }
+
     fetchArticle();
   }, [id]);
+
+  useEffect(() => {
+    if (showModal) {
+      router.push("/"); // Redirige vers la page d'accueil lorsque la modale est affichée
+    }
+  }, [showModal, router]);
 
   if (loading) {
     return (
@@ -53,7 +63,7 @@ export default function ArticlePage() {
 
   return (
     <>
-      <Header onClick={() => router.push("/")} />
+      <Header setShowModal={setShowModal} />
       <div className="px-5 md:px-20 my-10">
         <div className="mb-10">
           <Image
