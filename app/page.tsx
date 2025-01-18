@@ -13,10 +13,10 @@ interface Article {
   id: number;
   title: string;
   content: string;
-  image_path?: string; // Utilisation de l'URL de l'image
+  image_path?: string;
   category_id: number;
   author_username?: string;
-  created_at: string;
+  published_at?: string; // Utiliser published_at au lieu de created_at
 }
 
 export default function Home() {
@@ -24,11 +24,57 @@ export default function Home() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [articles, setArticles] = useState<Article[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [sortOrder, setSortOrder] = useState<"recent" | "oldest">("recent");
+  
   const { user, login } = useAuth();
   const router = useRouter();
   const { categories } = useCategoryContext();
-  const flattenedCategories = categories.flat();
+  const flattenedCategories = categories.flat().filter((category: any) => category.id && category.name);
+
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const res = await fetch("/api/articles");
+        if (!res.ok) throw new Error("Failed to fetch articles");
+        const data = await res.json();
+        console.log("data", data);
+        
+        // Utiliser published_at au lieu de created_at
+        const articlesWithDefaultDate = data.map((article: Article) => ({
+          ...article,
+          published_at: article.published_at || "1970-01-01T00:00:00.000Z", // Date par défaut
+        }));
+
+        setArticles(articlesWithDefaultDate);
+        setFilteredArticles(articlesWithDefaultDate);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchArticles();
+  }, []);
+
+  useEffect(() => {
+    // Filtrer et trier les articles en fonction de la catégorie sélectionnée et de l'ordre de tri
+    let updatedArticles = articles;
+
+    if (selectedCategory) {
+      updatedArticles = updatedArticles.filter(article => article.category_id === selectedCategory);
+    }
+
+    if (sortOrder === "recent") {
+      updatedArticles.sort((a, b) => new Date(b.published_at!).getTime() - new Date(a.published_at!).getTime());
+    } else {
+      updatedArticles.sort((a, b) => new Date(a.published_at!).getTime() - new Date(b.published_at!).getTime());
+    }
+
+    setFilteredArticles(updatedArticles);
+  }, [selectedCategory, sortOrder, articles]);
 
   const handleLogin = async () => {
     if (identifier && password) {
@@ -62,33 +108,13 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    async function fetchArticles() {
-      try {
-        const res = await fetch("/api/articles");
-        if (!res.ok) throw new Error("Failed to fetch articles");
-        const data = await res.json();
-        setArticles(data);
-      } catch (error) {
-        console.error("Error fetching articles:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchArticles();
-  }, []);
+  const handleCategoryClick = (categoryId: number) => {
+    setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
+  };
 
-  useEffect(() => {
-    const closeOnEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setShowModal(false);
-      }
-    };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => {
-      window.removeEventListener("keydown", closeOnEscape);
-    };
-  }, []);
+  const handleSortOrderChange = (order: "recent" | "oldest") => {
+    setSortOrder(order);
+  };
 
   if (loading) {
     return (
@@ -122,11 +148,55 @@ export default function Home() {
         </div>
       </div>
       
+      <div className="mb-8 px-4">
+        <div className="flex flex-wrap justify-center gap-2 mb-4">
+          {flattenedCategories.map(category => (
+            <button
+              key={category.id}
+              className={`px-4 py-2 rounded-full border ${selectedCategory === category.id ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"} dark:bg-gray-700 dark:text-white`}
+              onClick={() => handleCategoryClick(category.id)}
+            >
+              {category.name.length > 3 ? category.name.slice(0, 3) : category.name}
+            </button>
+          ))}
+          <button
+              className={`px-4 py-2 rounded-full border ${selectedCategory === null ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"} dark:bg-gray-700 dark:text-white`}
+              onClick={() => handleCategoryClick(null)}
+            >
+              Tout
+            </button>
+        </div>
+        <div className="flex justify-center gap-4">
+          <button
+            className={`px-4 py-2 rounded-full border ${sortOrder === "recent" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"} dark:bg-gray-700 dark:text-white`}
+            onClick={() => handleSortOrderChange("recent")}
+          >
+            Récents
+          </button>
+          <button
+            className={`px-4 py-2 rounded-full border ${sortOrder === "oldest" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"} dark:bg-gray-700 dark:text-white`}
+            onClick={() => handleSortOrderChange("oldest")}
+          >
+            Moins récents
+          </button>
+        </div>
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-3 place-items-center gap-5 max-w-7xl mx-auto px-4">
-        {articles.map((article) => {
+        {filteredArticles.map((article) => {
           const category = flattenedCategories.find((cat) => cat.id === article.category_id);
           const categoryName = category ? category.name : "Uncategorized";
-          
+          console.log(`Article ID: ${article.id}, published_at: ${article.published_at}`);
+          const publishedAt = article.published_at ? new Date(article.published_at) : null;
+          console.log(`Converted Date for Article ID: ${article.id}, Date: ${publishedAt}`);
+          const formattedDate = publishedAt && !isNaN(publishedAt.getTime()) 
+            ? publishedAt.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+            : "Invalid Date";
+
           return (
             <Link
               key={article.id}
@@ -152,11 +222,7 @@ export default function Home() {
               </h2>
               <div className="text-gray-500 flex text-base space-x-10 py-3">
                 <div>{article.author_username || "Unknown Author"}</div>
-                <div>{new Date(article.created_at).toLocaleDateString('fr-FR', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}</div>
+                <div>{formattedDate}</div>
               </div>
             </Link>
           );
