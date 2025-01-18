@@ -1,41 +1,39 @@
+import express from 'express';
 import db from '../../../db/db.js';
+const router = express.Router();
 
-
-
-
-
-
-
-// Fonction pour récupérer tous les articles
 export async function GET(req) {
-    try {
-      const query = `
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id');
+  
+  try {
+    let query, params;
+    if (id) {
+      query = `
+        SELECT articles.*, users.username AS author_username
+        FROM articles
+        LEFT JOIN users ON articles.username = users.username
+        WHERE articles.id = ?
+      `;
+      params = [id];
+    } else {
+      query = `
         SELECT articles.*, users.username AS author_username
         FROM articles
         LEFT JOIN users ON articles.username = users.username
         ORDER BY articles.published_at DESC
       `;
-      const results = await db.query(query);
-  
-      // Vérifiez si les résultats sont bien dans un tableau de tableaux
-      const articles = results.length > 0 ? results[0] : [];
-  
-      // Vérification de la présence d'articles
-      if (articles && articles.length > 0) {
-        console.log('Articles récupérés:', articles);
-        return new Response(JSON.stringify(articles), { status: 200 });
-      } else {
-        console.log('Aucun article trouvé');
-        return new Response(JSON.stringify({ message: 'Aucun article trouvé' }), { status: 404 });
-      }
-  
-    } catch (error) {
-      console.error('Erreur lors de la récupération des articles:', error);
-      return new Response(JSON.stringify({ message: 'Erreur serveur', error: error.message }), { status: 500 });
+      params = [];
     }
+    const [results] = await db.query(query, params);
+    
+    return new Response(JSON.stringify(id ? results[0] : results), { status: 200 });
+  } catch (error) {
+    return new Response(JSON.stringify({ message: 'Erreur récupération article' }), { status: 500 });
   }
-  
-  
+}
+
+
   
   
 // Fonction pour créer un nouvel article
@@ -171,3 +169,5 @@ export async function DELETE(req) {
     );
   }
 }
+
+export default router;

@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -7,7 +6,7 @@ import path from 'path';
 
 // Import routes
 import authRoutes from './app/api/auth/route.js';
-import articleRoutes from './app/api/articles/route.js'; // Default import
+import articleRoutes from './app/api/articles/route.js';
 
 // Middleware
 import authenticateToken from './app/api/middleware/auth.js';
@@ -17,7 +16,6 @@ const app = express();
 
 // Use middlewares
 app.use(bodyParser.json());
-app.use(cors());
 app.use(cors({ origin: 'http://localhost:3000' }));
 
 // Multer configuration for file uploads
