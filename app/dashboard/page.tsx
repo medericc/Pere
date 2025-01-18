@@ -59,18 +59,14 @@ export default function Dashboard() {
         // Vérification des catégories
         console.log('Catégories récupérées avant aplatissement:', categoriesData);
   
-        // Aplatir les catégories si elles sont imbriquées
-        const flattenedCategories = categoriesData.flat();
+        // Aplatir les catégories et extraire uniquement les objets valides
+        const validCategories = categoriesData.flat().filter((category: any) => category.id && category.name);
   
-        // Vérification des catégories aplaties
-        console.log('Catégories récupérées après aplatissement:', flattenedCategories);
+        // Vérification des catégories filtrées
+        console.log('Catégories récupérées après extraction des noms:', validCategories);
   
-        if (Array.isArray(flattenedCategories)) {
-          setArticles(articlesData);
-          setCategories(flattenedCategories);  // Mettez à jour avec les catégories aplaties
-        } else {
-          throw new Error("Les catégories sont invalides");
-        }
+        setArticles(articlesData);
+        setCategories(validCategories);  // Mettez à jour avec les catégories filtrées
       } catch (error) {
         console.error("Erreur de récupération:", error);
       } finally {
@@ -81,48 +77,35 @@ export default function Dashboard() {
     fetchData();
   }, []);
   
-  
-// Modification de la gestion du formulaire pour envoyer l'image en fichier
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("image", file);
 
-const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (file) {
-    const formData = new FormData();
-    formData.append("image", file);
+      try {
+        const res = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData,
+        });
 
-    try {
-      const res = await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        body: formData,
-      });
+        if (!res.ok) {
+          throw new Error("Erreur lors de l'upload de l'image");
+        }
 
-      if (!res.ok) {
-        throw new Error("Erreur lors de l'upload de l'image");
+        const result = await res.json();
+        const imageUrl = result.imageUrl; // L'URL de l'image renvoyée par le backend
+
+        if (isEditing) {
+          setEditArticle({ ...editArticle!, thumbnail: imageUrl });
+        } else {
+          setNewArticle({ ...newArticle, thumbnail: imageUrl });
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'upload de l'image:", error);
       }
-
-      const result = await res.json();
-      const imageUrl = result.imageUrl; // L'URL de l'image renvoyée par le backend
-
-      if (isEditing) {
-        setEditArticle({ ...editArticle!, thumbnail: imageUrl });
-      } else {
-        setNewArticle({ ...newArticle, thumbnail: imageUrl });
-      }
-    } catch (error) {
-      console.error("Erreur lors de l'upload de l'image:", error);
     }
-  }
-};
-const flattenCategories = (categories: any[]): Category[] => {
-  return categories.reduce((acc: Category[], category: any) => {
-    const { id, name, subcategories } = category;
-    acc.push({ id, name });
-    if (Array.isArray(subcategories)) {
-      acc = acc.concat(flattenCategories(subcategories));
-    }
-    return acc;
-  }, []);
-};
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,88 +188,84 @@ const flattenCategories = (categories: any[]): Category[] => {
       </div>
 
       <form
-  onSubmit={handleSubmit}
-  className="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md mb-10"
->
-  <h2 className="text-xl font-semibold mb-4">
-    {isEditing ? "Modifier l'article" : "Créer un nouvel article"}
-  </h2>
-  
-  <input
-    type="text"
-    placeholder="Titre"
-    value={isEditing ? editArticle?.title || "" : newArticle.title}
-    onChange={(e) =>
-      isEditing
-        ? setEditArticle({ ...editArticle!, title: e.target.value })
-        : setNewArticle({ ...newArticle, title: e.target.value })
-    }
-    className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-    required
-  />
+        onSubmit={handleSubmit}
+        className="bg-gray-100 dark:bg-gray-800 p-6 rounded-md shadow-md mb-10"
+      >
+        <h2 className="text-xl font-semibold mb-4">
+          {isEditing ? "Modifier l'article" : "Créer un nouvel article"}
+        </h2>
 
-  <textarea
-    placeholder="Contenu"
-    value={isEditing ? editArticle?.content || "" : newArticle.content}
-    onChange={(e) =>
-      isEditing
-        ? setEditArticle({ ...editArticle!, content: e.target.value })
-        : setNewArticle({ ...newArticle, content: e.target.value })
-    }
-    className="w-full p-2 mb-4 border rounded-md min-h-[200px] dark:bg-gray-700 dark:border-gray-600"
-    required
-  />
-  
-  <select
-    value={isEditing ? editArticle?.category || 1 : newArticle.category}
-    onChange={(e) => {
-      const value = parseInt(e.target.value);
-      isEditing
-        ? setEditArticle({ ...editArticle!, category: value })
-        : setNewArticle({ ...newArticle, category: value });
-    }}
-    className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-  >
-    {categories.length > 0 ? (
-      categories.map(category => (
-        <option key={category.id} value={category.id}>
-          {category.name}
-        </option>
-      ))
-    ) : (
-      <option disabled>Aucune catégorie disponible</option>
-    )}
-  </select>
+        <input
+          type="text"
+          placeholder="Titre"
+          value={isEditing ? editArticle?.title || "" : newArticle.title}
+          onChange={(e) =>
+            isEditing
+              ? setEditArticle({ ...editArticle!, title: e.target.value })
+              : setNewArticle({ ...newArticle, title: e.target.value })
+          }
+          className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+          required
+        />
 
-  {/* Affichage de l'image actuelle si elle existe */}
-  {isEditing && editArticle?.thumbnail && (
-    <div className="mb-4">
-      <img
-        src={editArticle.thumbnail}
-        alt="Image actuelle"
-        className="w-full h-48 object-cover rounded-md"
-      />
-      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Image actuelle</p>
-    </div>
-  )}
+        <textarea
+          placeholder="Contenu"
+          value={isEditing ? editArticle?.content || "" : newArticle.content}
+          onChange={(e) =>
+            isEditing
+              ? setEditArticle({ ...editArticle!, content: e.target.value })
+              : setNewArticle({ ...newArticle, content: e.target.value })
+          }
+          className="w-full p-2 mb-4 border rounded-md min-h-[200px] dark:bg-gray-700 dark:border-gray-600"
+          required
+        />
 
-  {/* Modification de l'image */}
-  <input
-  type="file"
-  accept="image/*"
-  onChange={handleImageUpload}
-  className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-/>
+        <select
+          value={isEditing ? editArticle?.category || 1 : newArticle.category}
+          onChange={(e) => {
+            const value = parseInt(e.target.value);
+            isEditing
+              ? setEditArticle({ ...editArticle!, category: value })
+              : setNewArticle({ ...newArticle, category: value });
+          }}
+          className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+        >
+          {categories.length > 0 ? (
+            categories.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))
+          ) : (
+            <option disabled>Aucune catégorie disponible</option>
+          )}
+        </select>
 
+        {isEditing && editArticle?.thumbnail && (
+          <div className="mb-4">
+            <img
+              src={editArticle.thumbnail}
+              alt="Image actuelle"
+              className="w-full h-48 object-cover rounded-md"
+            />
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Image actuelle</p>
+          </div>
+        )}
 
-  <button
-    type="submit"
-    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-  >
-    {isEditing ? "Modifier" : "Créer"}
-  </button>
-</form>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="w-full p-2 mb-4 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+        />
 
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+        >
+          {isEditing ? "Modifier" : "Créer"}
+        </button>
+      </form>
 
       <div>
         <h2 className="text-2xl font-semibold mb-4">Tous les articles</h2>
@@ -296,7 +275,7 @@ const flattenCategories = (categories: any[]): Category[] => {
               key={article.id}
               className="bg-white dark:bg-gray-700 p-4 rounded-md shadow-md"
             >
-            {article.thumbnail && (
+              {article.thumbnail && (
                 <div className="relative h-48 mb-4 rounded-md overflow-hidden">
                   <img
                     src={article.thumbnail}
