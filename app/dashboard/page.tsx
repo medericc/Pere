@@ -49,23 +49,29 @@ export default function Dashboard() {
           fetch("/api/articles"),
           fetch("/api/categories")
         ]);
-  
+
         if (!articlesRes.ok) throw new Error("Erreur lors de la récupération des articles");
         if (!categoriesRes.ok) throw new Error("Erreur lors de la récupération des catégories");
-  
+
         const articlesData = await articlesRes.json();
         const categoriesData = await categoriesRes.json();
-  
+
         // Vérification des catégories
         console.log('Catégories récupérées avant aplatissement:', categoriesData);
-  
+
         // Aplatir les catégories et extraire uniquement les objets valides
         const validCategories = categoriesData.flat().filter((category: any) => category.id && category.name);
-  
+
         // Vérification des catégories filtrées
         console.log('Catégories récupérées après extraction des noms:', validCategories);
-  
-        setArticles(articlesData);
+
+        // Vérification des articles pour s'assurer que chaque article a un category valide
+        const validArticles = articlesData.map((article: Article) => ({
+          ...article,
+          category: article.category || 1 // Valeur par défaut si category est indéfini
+        }));
+
+        setArticles(validArticles);
         setCategories(validCategories);  // Mettez à jour avec les catégories filtrées
       } catch (error) {
         console.error("Erreur de récupération:", error);
@@ -73,10 +79,10 @@ export default function Dashboard() {
         setLoading(false);
       }
     }
-  
+
     fetchData();
   }, []);
-  
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -165,9 +171,19 @@ export default function Dashboard() {
   const handleEdit = (article: Article) => {
     setIsEditing(true);
     setEditArticle(article);
+    setNewArticle({
+      title: article.title,
+      content: article.content,
+      category: article.category || 1, // Utiliser 1 comme valeur par défaut si category est indéfini
+      thumbnail: article.thumbnail || "",
+    });
   };
 
-  const getCategoryName = (categoryId: number) => {
+  const getCategoryName = (categoryId: number | undefined) => {
+    console.log("cat=", categoryId);
+    if (categoryId === undefined) {
+      return "Non classé";
+    }
     return categories.find(cat => cat.id === categoryId)?.name || "Non classé";
   };
 
