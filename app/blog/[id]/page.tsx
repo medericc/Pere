@@ -1,10 +1,10 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+
 interface Article {
   id: number;
   title: string;
@@ -16,11 +16,11 @@ export default function ArticlePage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchArticle() {
       if (!id) return;
-
       try {
         const res = await fetch(`/api/articles/${id}`);
         if (!res.ok) throw new Error("Failed to fetch article");
@@ -32,7 +32,6 @@ export default function ArticlePage() {
         setLoading(false);
       }
     }
-
     fetchArticle();
   }, [id]);
 
@@ -54,28 +53,25 @@ export default function ArticlePage() {
 
   return (
     <>
-    <Header />
-    <div className="px-5 md:px-20 my-10">
-         
-      <div className="mb-10">
-        <Image
-          src={
-            article.image_path ||
-            "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&auto=format&fit=crop&w=2607&q=80"
-          }
-          alt={article.title}
-          width={1600}
-          height={900}
-          className="w-full h-auto rounded-lg object-cover"
-          priority
-        />
+      <Header onClick={() => router.push("/")} />
+      <div className="px-5 md:px-20 my-10">
+        <div className="mb-10">
+          <Image
+            src={
+              article.image_path ||
+              "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&auto=format&fit=crop&w=2607&q=80"
+            }
+            alt={article.title}
+            width={1600}
+            height={900}
+            className="w-full h-auto rounded-lg object-cover"
+            priority
+          />
+        </div>
+        <h1 className="text-2xl md:text-4xl font-bold mb-4">{article.title}</h1>
+        <p className="text-base md:text-lg">{article.content}</p>
       </div>
-      <h1 className="text-2xl md:text-4xl font-bold mb-4">{article.title}</h1>
-      <p className="text-base md:text-lg">{article.content}</p>
-     
-    </div>
-     <Footer />
-     
-     </>
+      <Footer />
+    </>
   );
 }
