@@ -145,11 +145,16 @@ export default function Home() {
               <h2 className="text-base md:text-3xl font-bold">
                 {latestArticle.title}
               </h2>
-              <p className="text-sm mt-4">{latestArticle.author_username || "Unknown Author"} | {new Date(latestArticle.published_at!).toLocaleDateString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}</p>
+              <p className="text-sm mt-4 line-clamp-3">
+                {latestArticle.content && latestArticle.content.length > 150 ? latestArticle.content.substring(0, 150) + "..." : latestArticle.content}
+              </p>
+              <p className="text-sm mt-4">
+                {latestArticle.author_username || "Unknown Author"} | {new Date(latestArticle.published_at!).toLocaleDateString('fr-FR', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
             </div>
           </div>
         </div>
@@ -227,10 +232,13 @@ export default function Home() {
               <h2 className="text-2xl leading-7 font-bold py-1 line-clamp-2">
                 {article.title}
               </h2>
-              <div className="text-gray-500 flex text-base space-x-10 py-3">
+              <p className="text-sm mt-4 line-clamp-3">
+                {article.content && article.content.length > 150 ? article.content.substring(0, 150) + "..." : article.content}
+              </p>
+              <p className="text-gray-500 flex text-base space-x-10 py-3">
                 <div>{article.author_username || "Unknown Author"}</div>
                 <div>{formattedDate}</div>
-              </div>
+              </p>
             </Link>
           );
         })}
@@ -242,15 +250,12 @@ export default function Home() {
         <div
           id="modal-overlay"
           onClick={closeModal}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-        >
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white dark:bg-[#242535] p-8 rounded-md shadow-lg w-[90%] max-w-md">
             {user ? (
               <>
                 <h2 className="text-2xl mb-4 font-bold">You are logged in!</h2>
-                <p className="text-lg mb-6">
-                  Do you want to go to your dashboard?
-                </p>
+                <p className="text-lg mb-6">Do you want to go to your dashboard?</p>
                 <button
                   onClick={() => router.push("/dashboard")}
                   className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-const links = [{ displayName: "Blog", herf: "/blog" }];
+const links = [{ displayName: "Contact", herf: "/contact" }];
 
 interface HeaderProps {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
