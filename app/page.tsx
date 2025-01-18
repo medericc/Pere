@@ -16,7 +16,7 @@ interface Article {
   image_path?: string;
   category_id: number;
   author_username?: string;
-  published_at?: string; // Utiliser published_at au lieu de created_at
+  published_at?: string;
 }
 
 export default function Home() {
@@ -42,10 +42,9 @@ export default function Home() {
         const data = await res.json();
         console.log("data", data);
         
-        // Utiliser published_at au lieu de created_at
         const articlesWithDefaultDate = data.map((article: Article) => ({
           ...article,
-          published_at: article.published_at || "1970-01-01T00:00:00.000Z", // Date par défaut
+          published_at: article.published_at || "1970-01-01T00:00:00.000Z",
         }));
 
         setArticles(articlesWithDefaultDate);
@@ -60,7 +59,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Filtrer et trier les articles en fonction de la catégorie sélectionnée et de l'ordre de tri
     let updatedArticles = articles;
 
     if (selectedCategory) {
@@ -124,29 +122,38 @@ export default function Home() {
     );
   }
 
+  const latestArticle = filteredArticles[0];
+  const remainingArticles = filteredArticles.slice(1);
+
   return (
     <div>
       <Header setShowModal={setShowModal} />
-      <div className="mb-20 px-5 md:px-0">
-        <div className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer">
-          <Image 
-            src="https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2607&q=80"
-            alt="Hero image" 
-            fill
-            className="object-cover rounded-md"
-            priority
-          />
-          <div className="absolute -bottom-8 bg-white dark:bg-[#242535] p-6 ml-10 rounded-lg shadow-lg max-w-[80%] md:max-w-[40%]">
-            <p className="text-xs bg-blue-700 w-fit py-1 px-2 text-white rounded-md mb-1">
-              Technology
-            </p>
-            <h2 className="text-base md:text-3xl font-bold">
-              The Impact of Technology on the Workplace: How Technology is Changing
-            </h2>
-            <p className="text-sm mt-4">Jason Francisco | August 20, 2022</p>
+      {latestArticle && (
+        <div className="mb-20 px-5 md:px-0">
+          <div className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer">
+            <Image 
+              src={latestArticle.image_path || "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2607&q=80"}
+              alt={latestArticle.title}
+              fill
+              className="object-cover rounded-md"
+              priority
+            />
+            <div className="absolute -bottom-8 bg-white dark:bg-[#242535] p-6 ml-10 rounded-lg shadow-lg max-w-[80%] md:max-w-[40%]">
+              <p className="text-xs bg-blue-700 w-fit py-1 px-2 text-white rounded-md mb-1">
+                {flattenedCategories.find(cat => cat.id === latestArticle.category_id)?.name || "Uncategorized"}
+              </p>
+              <h2 className="text-base md:text-3xl font-bold">
+                {latestArticle.title}
+              </h2>
+              <p className="text-sm mt-4">{latestArticle.author_username || "Unknown Author"} | {new Date(latestArticle.published_at!).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       
       <div className="mb-8 px-4">
         <div className="flex flex-wrap justify-center gap-2 mb-4">
@@ -183,7 +190,7 @@ export default function Home() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 place-items-center gap-5 max-w-7xl mx-auto px-4">
-        {filteredArticles.map((article) => {
+        {remainingArticles.map((article) => {
           const category = flattenedCategories.find((cat) => cat.id === article.category_id);
           const categoryName = category ? category.name : "Uncategorized";
           console.log(`Article ID: ${article.id}, published_at: ${article.published_at}`);
