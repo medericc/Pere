@@ -109,8 +109,8 @@ export default function Home() {
       
       {/* Sélection du dernier article (ID le plus élevé) */}
       {articles.length > 0 && (
-        <div className="mb-20 px-5 md:px-0">
-          <Link href={`/blog/${latestArticle.id}`} className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer block">
+        <div className="mb-20 px-5 md:px-5">
+          <Link href={`/blog/${latestArticle.id}`} className="h-[250px] md:h-[400px] rounded-md relative cursor-pointer block">
             <Image
               src={latestArticle.image_path || "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2607&q=80"}
               alt={latestArticle.title}
@@ -118,8 +118,8 @@ export default function Home() {
               className="object-cover rounded-md"
               priority
             />
-            <div className="absolute -bottom-8 bg-white dark:bg-[#242535] p-5 ml-10 rounded-lg shadow-lg max-w-[80%] md:max-w-[40%]">
-              <p className="text-xs bg-blue-700 w-fit py-1 px-2 text-white rounded-md mb-1">
+           <div className="absolute -bottom-8 bg-white dark:bg-[#242535] p-5 ml-10 md:ml-0 md:left-1/2 md:-translate-x-1/2 rounded-lg shadow-lg max-w-[80%] md:max-w-[50%]">
+           <p className="text-xs bg-blue-700 w-fit py-1 px-2 text-white rounded-md mb-1">
                 {categories.find(cat => cat.id === latestArticle.category_id)?.name || "Uncategorized"}
               </p>
               <h2 className="text-base md:text-3xl font-bold">

@@ -18,7 +18,7 @@ export default function Header() {
   };
 
   return (
-    <header className="flex justify-between items-center py-9 px-5 md:px-0">
+    <header className="flex justify-between items-center py-9 px-5 md:px-10">
       <div onClick={handleLogoClick} className="cursor-pointer flex space-x-2 items-center">
         <Image
           src={theme === "light" ? "/light-union.svg" : "/dark-union.svg"}
