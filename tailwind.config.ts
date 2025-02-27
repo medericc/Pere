@@ -1,7 +1,7 @@
 import { Config } from "tailwindcss";
 import typography from "@tailwindcss/typography";
 import daisyui from "daisyui";
-
+import tailwindcssAnimate from "tailwindcss-animate";
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -60,7 +60,7 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [typography, daisyui, require("tailwindcss-animate")],
+  plugins: [typography, daisyui, tailwindcssAnimate],
 };
 
 export default config;
