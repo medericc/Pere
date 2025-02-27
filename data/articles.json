@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "title": "Lettres de Saint Ignace d'Antioche",
+    "content": "Saint Ignace d'Antioche, évêque et disciple des apôtres, écrit sept lettres en route vers son martyre à Rome (vers 107-110).\n\n Il exhorte les chrétiens à rester unis sous l'autorité des évêques, insiste sur la vraie nature du Christ et met en garde contre les hérésies.\n\n Il rappelle que l'unité de l’Église repose sur l’évêque (la soumission aux évêques permet de rester dans la vraie foi).\n\n Il affirme que le Christ est pleinement Dieu et pleinement homme, et que la foi doit être accompagnée d’amour et d’humilité.\n\n Il rejette le judaïsme, car le Christ apporte une nouvelle vie sous la grâce, et non plus sous la Loi.\n\n Il insiste sur le fait que Jésus est réellement né, a souffert et est ressuscité dans un vrai corps.\n\n Acceptant son martyre comme témoignage de foi, il demande que l’Église reste unie, sans division.\n\n Il souligne que l’Eucharistie est le remède d’immortalité, encourage les croyants à persévérer devant les épreuves et insiste sur l'importance de la fermeté face aux fausses doctrines.",
+    "image_path": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Ignatius_of_Antioch.jpg/640px-Ignatius_of_Antioch.jpg",
+    "category_id": 1,
+    "author_username": "Saint Ignace d'Antioche",
+    "published_at": "0107-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "La Didachè – L’Enseignement des Douze Apôtres",
+    "content": "La Didachè (vers 70-150 apr. J.-C.) est l’un des premiers écrits chrétiens hors du Nouveau Testament.\n\n Elle explique que deux chemins s'opposent : la Voie de la Vie, caractérisée par l'amour, la justice et l'humilité, et la Voie de la Mort, marquée par le péché, l'idolâtrie et la violence.\n\n La Voie de la Vie suit le double commandement : aimer Dieu et son prochain. Elle interdit donc le meurtre, le mensonge, la colère, l'injustice, l'avortement, l'adultère et le vol.\n\n Elle évoque aussi le baptême, qui se fait par immersion au nom du Père, du Fils et du Saint-Esprit, ainsi que l'Eucharistie, qui est un repas sacré réservé aux baptisés.\n\n Sur la vie communautaire, la Didachè recommande d'éviter les faux prophètes et les hypocrites, de partager ses biens, de pratiquer le jeûne (le mercredi et le vendredi) et de prier le Notre Père trois fois par jour.\n\n Enfin, elle insiste sur le respect des évêques et des diacres, qui doivent être irréprochables et intègres.\n\n Elle met en garde contre la Parousie, expliquant que le retour du Christ sera précédé de tromperies et d'une grande épreuve.",
+    "image_path": "https://www.bibliorama.org/wp-content/uploads/2021/06/douze-apotres-400x250.jpg",
+    "category_id": 1,
+    "author_username": "Auteur inconnu",
+    "published_at": "0070-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "title": "Contre les hérésies – Irénée de Lyon",
+    "content": "Irénée de Lyon réfute les doctrines gnostiques qui menacent l’unité et la vérité de la foi chrétienne.\n\n Il s’attaque notamment à Valentin et aux spéculations gnostiques sur des émanations divines (éons) prétendant expliquer l’origine du monde.\n\n Il affirme que Dieu est unique, créateur du ciel et de la terre, et rejette l’idée gnostique d’un Demiurge inférieur ayant formé le monde.\n\n Il insiste sur l’unité entre l’Ancien et le Nouveau Testament, affirmant que le Dieu de Moïse est aussi celui du Christ.\n\n Il défend l’Incarnation réelle du Verbe, expliquant que Jésus est vraiment Dieu et vraiment homme, et que sa Passion et sa Résurrection sont historiques et salvatrices.\n\n Irénée met en avant la transmission apostolique comme garantie de la vraie foi, soulignant l’importance de l’Église romaine et de la succession des évêques contre les interprétations ésotériques des hérétiques.\n\n Il insiste sur le rôle du Saint-Esprit, de l’Eucharistie (qu’il considère comme le véritable corps et sang du Christ), et sur la résurrection des corps contre la vision purement spirituelle des gnostiques.",
+    "image_path": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT86S7aGDUzO3KO1sGCFyVxW-h6Yeaa6dOEUA&s",
+    "category_id": 1,
+    "author_username": "Irénée de Lyon",
+    "published_at": "0180-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 4,
+    "title": "La Prière du Seigneur – Cyprien de Carthage",
+    "content": "Cyprien de Carthage commente en détail le Notre Père, prière enseignée par Jésus à ses disciples.\n\n Il insiste sur son importance comme modèle parfait de prière chrétienne, résumant la foi et les devoirs des croyants.\n\n Il explique chaque demande, soulignant leur portée spirituelle et morale : l’adoration de Dieu, la venue de son règne, la nécessité du pardon et la lutte contre le mal.\n\n Cyprien met en avant l’unité des chrétiens dans cette prière commune, montrant qu’ils doivent s’adresser à Dieu non comme individus isolés, mais en tant que membres de l’Église.\n\n Il insiste sur l’humilité, la confiance et la persévérance dans la prière, rejetant toute récitation mécanique dénuée de sincérité.",
+    "image_path": "https://i0.wp.com/viecontemplative.vidareligiosa.org/wp-content/uploads/2016/09/CYPRIEN_INSTITUT_DU_VERBE_INCARNE.jpg",
+    "category_id": 1,
+    "author_username": "Cyprien de Carthage",
+    "published_at": "0250-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 5,
+    "title": "Vie d’Antoine – Athanase d’Alexandrie",
+    "content": "Cet ouvrage, écrit au IVᵉ siècle, raconte la vie de saint Antoine, considéré comme le père du monachisme chrétien.\n\n Né en Égypte, Antoine renonce à ses biens après avoir entendu l’appel évangélique à tout abandonner pour suivre le Christ.\n\n Il se retire alors dans le désert pour mener une vie d’ascèse, consacrée à la prière et à la lutte spirituelle.\n\n Athanase met en avant les épreuves d’Antoine, notamment les tentations du diable qui prend diverses formes pour le détourner de sa foi.\n\n Il décrit ses combats contre les démons, qui l’assaillent physiquement et mentalement, mais qu’il repousse par sa prière et sa confiance en Dieu.\n\n Son mode de vie austère et sa sagesse attirent de nombreux disciples, faisant de lui un modèle pour le mouvement monastique naissant.",
+    "image_path": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxqofiJgbwaUFo6FWoGUjH-5w1H7x_OzXaPw&s",
+    "category_id": 1,
+    "author_username": "Athanase d’Alexandrie",
+    "published_at": "0360-01-01T00:00:00.000Z"
+  }
+]

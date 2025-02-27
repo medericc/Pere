@@ -6,10 +6,7 @@ import path from 'path';
 
 // Import routes
 import authRoutes from './app/api/auth/route.js';
-import articleRoutes from './app/api/articles/route.js';
 
-// Middleware
-import authenticateToken from './app/api/middleware/auth.js';
 
 // Initialize Express app
 const app = express();
@@ -52,8 +49,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
 // Public routes
 app.use('/app/api/auth', authRoutes);
 
-// Protected routes
-app.use('/app/api/articles', authenticateToken, articleRoutes);
+
 
 // Start the server
 const PORT = 5000;

@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useParams  } from "next/navigation";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import articlesData from "@/data/articles.json";
 
 interface Article {
   id: number;
@@ -16,34 +17,18 @@ interface Article {
 export default function ArticlePage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
   const { id } = useParams();
-  const router = useRouter();
+ 
 
   useEffect(() => {
-    async function fetchArticle() {
-      if (!id) return;
+    if (!id) return;
 
-      try {
-        const res = await fetch(`/api/articles/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch article");
-        const data = await res.json();
-        setArticle(data);
-      } catch (error) {
-        console.error("Error fetching article:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchArticle();
+    const foundArticle = articlesData.find((article) => article.id === Number(id));
+    setArticle(foundArticle || null);
+    setLoading(false);
   }, [id]);
 
-  useEffect(() => {
-    if (showModal) {
-      router.push("/"); // Redirige vers la page d'accueil lorsque la modale est affichée
-    }
-  }, [showModal, router]);
+
 
   if (loading) {
     return (
@@ -63,7 +48,7 @@ export default function ArticlePage() {
 
   return (
     <>
-      <Header setShowModal={setShowModal} />
+      <Header />
       <div className="px-5 md:px-20 my-10">
         <div className="mb-10">
           <Image

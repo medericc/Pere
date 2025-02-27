@@ -1,6 +1,8 @@
-import type { Config } from "tailwindcss";
+import { Config } from "tailwindcss";
+import typography from "@tailwindcss/typography";
+import daisyui from "daisyui";
 
-export default {
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -15,5 +17,7 @@ export default {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
-} satisfies Config;
+  plugins: [typography, daisyui],
+};
+
+export default config;
