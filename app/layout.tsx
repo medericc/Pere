@@ -12,11 +12,11 @@ export const metadata: Metadata = {
   title: "BibleEnMain - Découvrez les Saints & Histoires Bibliques",
   description: "Explorez les vies des Saints et les résumés des histoires bibliques en un seul endroit.",
   keywords: ["Bible", "Saints", "Histoires Bibliques", "Religion", "Spiritualité"],
-  authors: [{ name: "BibleEnMain", url: "https://ton-site.com" }],
+  authors: [{ name: "BibleEnMain", url: "https://livrebiblique.vercel.app/" }],
   openGraph: {
     title: "BibleEnMain - Découvrez les Saints & Histoires Bibliques",
     description: "Plongez dans la Bible et les vies des Saints avec des résumés et explications détaillées.",
-    url: "https://ton-site.com",
+    url: "https://livrebiblique.vercel.app/",
     siteName: "BibleEnMain",
     images: [
       {
@@ -54,6 +54,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body
