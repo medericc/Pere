@@ -2,10 +2,8 @@
 
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const links = [{ displayName: "Contact", href: "/contact" }];
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -30,17 +28,11 @@ export default function Header() {
           priority
         />
         <div className="text-2xl">
-          Meta<span className="font-bold">Blog</span>
+        BibleEn<span className="font-bold">Main</span>
         </div>
       </div>
       <div className="flex space-x-10">
-        <nav className="space-x-10">
-          {links.map((l, idx) => (
-            <Link href={l.href} key={idx}>
-              {l.displayName}
-            </Link>
-          ))}
-        </nav>
+       
         <button onClick={toggleTheme} className="focus:outline-none" aria-label="Toggle theme">
           <Image
             src={theme === "light" ? "/light-toggle.svg" : "/dark-toggle.svg"}

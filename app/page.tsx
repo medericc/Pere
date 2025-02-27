@@ -109,7 +109,7 @@ export default function Home() {
       {/* Sélection du dernier article (ID le plus élevé) */}
       {articles.length > 0 && (
         <div className="mb-20 px-5 md:px-0">
-          <div className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer">
+          <Link href={`/blog/${latestArticle.id}`} className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer block">
             <Image
               src={latestArticle.image_path || "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2607&q=80"}
               alt={latestArticle.title}
@@ -137,7 +137,7 @@ export default function Home() {
                 })}
               </p>
             </div>
-          </div>
+          </Link>
         </div>
       )}
   

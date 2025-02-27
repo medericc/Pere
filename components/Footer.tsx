@@ -17,13 +17,13 @@ export default function Footer() {
           priority
         />
         <div className="text-2xl">
-          Meta<span className="font-bold">Blog</span>
+          BibleEn<span className="font-bold">Main</span>
         </div>
       </Link>
-      <div className="flex flex-col md:flex-row text-gray-700 dark:text-gray-400 md:space-x-10">
-        <Link href={"/"}>Terms of Use</Link>
-        <Link href={"/"}>Privacy Policy</Link>
-        <Link href={"/"}>Cookie Policy</Link>
+      <div className="flex flex-col md:flex-row text-gray-700 dark:text-gray-400 md:space-x-10 m-auto">
+        <Link href={"/"}>Le Chemin</Link>
+        <Link href={"/"}>La Vérité</Link>
+        <Link href={"/"}>Et la Vie</Link>
       </div>
     </div>
   );
