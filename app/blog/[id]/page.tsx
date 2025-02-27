@@ -6,12 +6,13 @@ import { useParams  } from "next/navigation";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import articlesData from "@/data/articles.json";
-
+import { Button } from "@/components/ui/button";
 interface Article {
   id: number;
   title: string;
   content: string;
   image_path?: string;
+  link?: string;
 }
 
 export default function ArticlePage() {
@@ -65,6 +66,22 @@ export default function ArticlePage() {
         </div>
         <h1 className="text-2xl md:text-4xl font-bold mb-4">{article.title}</h1>
         <p className="text-base md:text-lg">{article.content}</p>
+        {article.link && (
+          <div className="mt-6 flex justify-center">
+             {article.link && (
+          <div className="mt-2 flex justify-center">
+            <Button
+              asChild
+              className="text-lg px-8 py-4 md:text-xl md:px-10 md:py-5"
+            >
+              <a href={article.link} target="_blank" rel="noopener noreferrer">
+                Voir le livre en entier
+              </a>
+            </Button>
+          </div>
+        )}
+          </div>
+        )}
       </div>
       <Footer />
     </>

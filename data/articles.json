@@ -6,7 +6,8 @@
     "image_path": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Ignatius_of_Antioch.jpg/640px-Ignatius_of_Antioch.jpg",
     "category_id": 1,
     "author_username": "Saint Ignace d'Antioche",
-    "published_at": "0107-01-01T00:00:00.000Z"
+    "published_at": "0107-01-01T00:00:00.000Z",
+    "link": "https://paroissebordeauxmaritime.fr/data/medias/documents/lectures/ignacedantioche_lettres.pdf"
   },
   {
     "id": 2,
@@ -15,7 +16,8 @@
     "image_path": "https://www.bibliorama.org/wp-content/uploads/2021/06/douze-apotres-400x250.jpg",
     "category_id": 1,
     "author_username": "Auteur inconnu",
-    "published_at": "0070-01-01T00:00:00.000Z"
+    "published_at": "0070-01-01T00:00:00.000Z",
+    "link": "http://matavel.wifeo.com/documents/La-Didache.pdf"
   },
   {
     "id": 3,
@@ -24,7 +26,8 @@
     "image_path": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT86S7aGDUzO3KO1sGCFyVxW-h6Yeaa6dOEUA&s",
     "category_id": 2,
     "author_username": "Irénée de Lyon",
-    "published_at": "0180-01-01T00:00:00.000Z"
+    "published_at": "0180-01-01T00:00:00.000Z",
+    "link": "http://fdier.free.fr/AdvHaer.pdf"
   },
   {
     "id": 4,
@@ -33,7 +36,8 @@
     "image_path": "https://i0.wp.com/viecontemplative.vidareligiosa.org/wp-content/uploads/2016/09/CYPRIEN_INSTITUT_DU_VERBE_INCARNE.jpg",
     "category_id": 2,
     "author_username": "Cyprien de Carthage",
-    "published_at": "0250-01-01T00:00:00.000Z"
+    "published_at": "0250-01-01T00:00:00.000Z",
+    "link": "https://archive.org/details/histoire-et-oeuvres-completes-de-saint-cyprien-vol-3/Histoire%20et%20oeuvres%20compl%C3%A8tes%20de%20saint%20Cyprien%20vol%201/page/88/mode/2up"
   },
   {
     "id": 5,
@@ -42,6 +46,7 @@
     "image_path": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxqofiJgbwaUFo6FWoGUjH-5w1H7x_OzXaPw&s",
     "category_id": 3,
     "author_username": "Athanase d’Alexandrie",
-    "published_at": "0360-01-01T00:00:00.000Z"
+    "published_at": "0360-01-01T00:00:00.000Z",
+    "link": "https://www.bibliotheque-monastique.ch/bibliotheque/bibliotheque/saints/peres/antoine/viedesaintantoine.htm"
   }
 ]
