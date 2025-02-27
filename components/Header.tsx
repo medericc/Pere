@@ -3,13 +3,12 @@
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const links = [{ displayName: "Contact", href: "/contact" }];
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
-  const pathname = usePathname();
   const router = useRouter();
 
   const toggleTheme = () => {
@@ -17,9 +16,7 @@ export default function Header() {
   };
 
   const handleLogoClick = () => {
-    if (pathname === "/blog") {
-      router.push("/"); // Redirige vers la page d'accueil si sur /blog
-    }
+    router.push("/"); // Always navigate to the homepage
   };
 
   return (

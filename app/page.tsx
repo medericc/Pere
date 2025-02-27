@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import data from "@/data/articles.json";
+
 interface Article {
   id: number;
   title: string;
@@ -16,14 +17,23 @@ interface Article {
   author_username?: string;
   published_at?: string;
 }
+
 interface Category {
   id: number;
   name: string;
 }
 
+const categoriesData: Category[] = [
+  { id: 1, name: "Pères apostoliques" },
+  { id: 2, name: "Apologistes" },
+  { id: 3, name: "Grec" },
+  { id: 4, name: "Latins" },
+  { id: 5, name: "Désert" },
+  { id: 6, name: "Docteurs" },
+];
+
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,14 +42,13 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        // data est un tableau d'articles, pas un objet contenant articles et categories
         const articlesData = data.map((article) => ({
           ...article,
           published_at: article.published_at || "1970-01-01T00:00:00.000Z",
         }));
-  
+
         setArticles(articlesData);
-        setFilteredArticles(articlesData);
+        setCategories(categoriesData);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -48,9 +57,16 @@ export default function Home() {
     }
     fetchData();
   }, []);
-  
 
-  useEffect(() => {
+  const handleCategoryClick = (categoryId: number | null) => {
+    setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filterAndSearchArticles = (articles: Article[]) => {
     let updatedArticles = articles;
 
     if (selectedCategory !== null) {
@@ -67,15 +83,7 @@ export default function Home() {
       );
     }
 
-    setFilteredArticles(updatedArticles);
-  }, [selectedCategory, searchTerm, articles]);
-
-  const handleCategoryClick = (categoryId: number | null) => {
-    setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    return updatedArticles;
   };
 
   if (loading) {
@@ -86,71 +94,68 @@ export default function Home() {
     );
   }
 
+  const latestArticle = articles.reduce((prev, current) =>
+    prev.id > current.id ? prev : current
+  );
+
+  const filteredArticles = filterAndSearchArticles(
+    articles.filter((article) => article.id !== latestArticle.id)
+  );
+
   return (
     <div>
       <Header />
       
       {/* Sélection du dernier article (ID le plus élevé) */}
-      {filteredArticles.length > 0 && (
-        (() => {
-          const latestArticle = filteredArticles.reduce((prev, current) =>
-            prev.id > current.id ? prev : current
-          );
-  
-          return (
-            <div className="mb-20 px-5 md:px-0">
-              <div className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer">
-                <Image
-                  src={latestArticle.image_path || "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2607&q=80"}
-                  alt={latestArticle.title}
-                  fill
-                  className="object-cover rounded-md"
-                  priority
-                />
-                <div className="absolute -bottom-8 bg-white dark:bg-[#242535] p-5 ml-10 rounded-lg shadow-lg max-w-[80%] md:max-w-[40%]">
-                  <p className="text-xs bg-blue-700 w-fit py-1 px-2 text-white rounded-md mb-1">
-                    {categories.find(cat => cat.id === latestArticle.category_id)?.name || "Uncategorized"}
-                  </p>
-                  <h2 className="text-base md:text-3xl font-bold">
-                    {latestArticle.title}
-                  </h2>
-                  <p className="text-sm mt-3 line-clamp-3">
-                    {latestArticle.content.length > 150
-                      ? latestArticle.content.substring(0, 150) + "..."
-                      : latestArticle.content}
-                  </p>
-                  <p className="text-xs mt-4">
-                    {latestArticle.author_username || "Unknown Author"} | {new Date(latestArticle.published_at!).toLocaleDateString('fr-FR', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
-              </div>
+      {articles.length > 0 && (
+        <div className="mb-20 px-5 md:px-0">
+          <div className="h-[250px] md:h-[600px] rounded-md relative cursor-pointer">
+            <Image
+              src={latestArticle.image_path || "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2607&q=80"}
+              alt={latestArticle.title}
+              fill
+              className="object-cover rounded-md"
+              priority
+            />
+            <div className="absolute -bottom-8 bg-white dark:bg-[#242535] p-5 ml-10 rounded-lg shadow-lg max-w-[80%] md:max-w-[40%]">
+              <p className="text-xs bg-blue-700 w-fit py-1 px-2 text-white rounded-md mb-1">
+                {categories.find(cat => cat.id === latestArticle.category_id)?.name || "Uncategorized"}
+              </p>
+              <h2 className="text-base md:text-3xl font-bold">
+                {latestArticle.title}
+              </h2>
+              <p className="text-sm mt-3 line-clamp-3">
+                {latestArticle.content.length > 150
+                  ? latestArticle.content.substring(0, 150) + "..."
+                  : latestArticle.content}
+              </p>
+              <p className="text-xs mt-4">
+                {latestArticle.author_username || "Unknown Author"} | {new Date(latestArticle.published_at!).toLocaleDateString('fr-FR', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
             </div>
-          );
-        })()
+          </div>
+        </div>
       )}
   
-      {/* Boutons de filtrage */}
+      {/* Menu déroulant de filtrage */}
       <div className="mb-8 px-4">
-        <div className="flex flex-wrap justify-center gap-2 mb-4">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              className={`px-4 py-2 rounded-full border ${selectedCategory === category.id ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
-              onClick={() => handleCategoryClick(category.id)}
-            >
-              {category.name}
-            </button>
-          ))}
-          <button
-            className={`px-4 py-2 rounded-full border ${selectedCategory === null ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"}`}
-            onClick={() => handleCategoryClick(null)}
+        <div className="flex justify-center mb-4">
+          <select
+            className="px-4 py-2 rounded-full border w-full max-w-md"
+            value={selectedCategory ?? ""}
+            onChange={(event) => handleCategoryClick(Number(event.target.value) || null)}
           >
-            Tout
-          </button>
+            <option value="">Tout</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="flex justify-center mb-4">
           <input
@@ -165,35 +170,32 @@ export default function Home() {
   
       {/* Liste des articles sauf le dernier */}
       <div className="grid grid-cols-1 md:grid-cols-3 place-items-center gap-5 max-w-7xl mx-auto px-4">
-        {filteredArticles
-          .filter(article => article.id !== Math.max(...filteredArticles.map(a => a.id))) // Exclure latestArticle
-          .map((article) => (
-            <Link
-              key={article.id}
-              href={`/blog/${article.id}`}
-              className="p-4 group rounded-lg border w-full max-w-[392px] border-gray-200 hover:shadow-lg transition-all duration-300"
-            >
-              <div className="relative h-60 w-full overflow-hidden rounded-md">
-                <img
-                  src={article.image_path || "/images/placeholder.jpg"}
-                  alt={article.title}
-                  className="object-cover w-full h-full rounded-md transform group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <h2 className="text-2xl leading-7 font-bold py-1 line-clamp-2 mt-2">
-                {article.title}
-              </h2>
-              <p className="text-sm mt-2 line-clamp-3">
-                {article.content.length > 150
-                  ? article.content.substring(0, 150) + "..."
-                  : article.content}
-              </p>
-            </Link>
-          ))}
+        {filteredArticles.map((article) => (
+          <Link
+            key={article.id}
+            href={`/blog/${article.id}`}
+            className="p-4 group rounded-lg border w-full max-w-[392px] border-gray-200 hover:shadow-lg transition-all duration-300"
+          >
+            <div className="relative h-60 w-full overflow-hidden rounded-md">
+              <img
+                src={article.image_path || "/images/placeholder.jpg"}
+                alt={article.title}
+                className="object-cover w-full h-full rounded-md transform group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <h2 className="text-2xl leading-7 font-bold py-1 line-clamp-2 mt-2">
+              {article.title}
+            </h2>
+            <p className="text-sm mt-2 line-clamp-3">
+              {article.content.length > 150
+                ? article.content.substring(0, 150) + "..."
+                : article.content}
+            </p>
+          </Link>
+        ))}
       </div>
   
       <Footer />
     </div>
   );
-  
 }
