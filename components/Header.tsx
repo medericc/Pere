@@ -35,7 +35,7 @@ export default function Header() {
        
         <button onClick={toggleTheme} className="focus:outline-none" aria-label="Toggle theme">
           <Image
-            src={theme === "light" ? "/light-toggle.svg" : "/dark-toggle.svg"}
+            src={theme === "light" ? "/noir.svg" : "/blanc.svg"}
             alt="theme toggle"
             width={48}
             height={28}

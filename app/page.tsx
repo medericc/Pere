@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Link from "next/link";
 import Image from "next/image";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 import data from "@/data/articles.json";
 
@@ -24,9 +25,9 @@ interface Category {
 }
 
 const categoriesData: Category[] = [
-  { id: 1, name: "Pères apostoliques" },
+  { id: 1, name: "Apostoliques" },
   { id: 2, name: "Apologistes" },
-  { id: 3, name: "Grec" },
+  { id: 3, name: "Grecs" },
   { id: 4, name: "Latins" },
   { id: 5, name: "Désert" },
   { id: 6, name: "Docteurs" },
@@ -143,20 +144,25 @@ export default function Home() {
   
       {/* Menu déroulant de filtrage */}
       <div className="mb-8 px-4">
-        <div className="flex justify-center mb-4">
-          <select
-            className="px-4 py-2 rounded-full border w-full max-w-md"
-            value={selectedCategory ?? ""}
-            onChange={(event) => handleCategoryClick(Number(event.target.value) || null)}
-          >
-            <option value="">Tout</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="flex justify-center mb-4 w-full max-w-md mx-auto">
+    <Select
+      value={selectedCategory !== null ? selectedCategory.toString() : "all"}
+      onValueChange={(value) => handleCategoryClick(value === "all" ? null : Number(value))}
+    >
+      <SelectTrigger className="w-full border border-gray-300 dark:border-white rounded-md">
+
+        <SelectValue placeholder="Tout" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">Tout</SelectItem> {/* Valeur non vide */}
+        {categories.map((category) => (
+          <SelectItem key={category.id} value={category.id.toString()}>
+            {category.name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  </div>
         <div className="flex justify-center mb-4">
           <input
             type="text"
