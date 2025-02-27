@@ -57,7 +57,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body
-        className={`${work_Sans.className} antialiased bg-white dark:bg-[#242535] text-black dark:text-white max-w-7xl mx-auto`}
+        className={`${work_Sans.className} antialiased bg-white dark:bg-[#242535] text-black dark:text-white  mx-auto`}
       >
         <ThemeProvider
           attribute="class"
