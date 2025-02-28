@@ -9,13 +9,13 @@ const work_Sans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "BibleEnMain - Découvrez les Saints & Histoires Bibliques",
-  description: "Explorez les vies des Saints et les résumés des histoires bibliques en un seul endroit.",
+  title: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
+  description: "Explorez les Écrits des Pères de l'Église en un seul endroit.",
   keywords: ["Bible", "Saints", "Histoires Bibliques", "Religion", "Spiritualité"],
   authors: [{ name: "BibleEnMain", url: "https://livrebiblique.vercel.app/" }],
   openGraph: {
-    title: "BibleEnMain - Découvrez les Saints & Histoires Bibliques",
-    description: "Plongez dans la Bible et les vies des Saints avec des résumés et explications détaillées.",
+    title: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
+    description: "Plongez dans les Écrist des Pères de l'Église avec des résumés et explications détaillées.",
     url: "https://livrebiblique.vercel.app/",
     siteName: "BibleEnMain",
     images: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "BibleEnMain - Découvrez les Saints & Histoires Bibliques",
+        alt: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
       },
     ],
     type: "website",
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@bibleenmain",
     creator: "@bibleenmain",
-    title: "BibleEnMain - Découvrez les Saints & Histoires Bibliques",
-    description: "Explorez les vies des Saints et les résumés des histoires bibliques en un seul endroit.",
+    title: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
+    description: "Explorez les écris des Pères de l'Église en un seul endroit.",
     images: ["/apple-touch-icon.png"],
   },
   icons: {
