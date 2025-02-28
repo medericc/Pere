@@ -52,11 +52,14 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <head>
+      <meta name="google-adsense-account" content="ca-pub-6915108633693700" />
+    
       <link rel="icon" type="image/png" href="/favicon.png" />
 
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#ffffff" />
+        
       </head>
       <body
         className={`${work_Sans.className} antialiased bg-white dark:bg-[#242535] text-black dark:text-white  mx-auto`}
