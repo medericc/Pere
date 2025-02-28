@@ -3,7 +3,7 @@ import { Work_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import type { Metadata } from "next";
-
+import { Analytics } from "@vercel/analytics/react"
 const work_Sans = Work_Sans({
   subsets: ["latin"],
 });
@@ -69,6 +69,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
