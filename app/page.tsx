@@ -29,7 +29,7 @@ const categoriesData: Category[] = [
   { id: 2, name: "Apologistes" },
   { id: 3, name: "Grecs" },
   { id: 4, name: "Latins" },
-  { id: 5, name: "Désert" },
+  { id: 5, name: "Déserts" },
   { id: 6, name: "Docteurs" },
 ];
 
