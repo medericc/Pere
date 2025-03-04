@@ -31,6 +31,9 @@ const categoriesData: Category[] = [
   { id: 4, name: "Latins" },
   { id: 5, name: "Désert" },
   { id: 6, name: "Docteurs" },
+  { id: 7, name: "Autres" },
+  
+
 ];
 
 export default function Home() {
