@@ -51,7 +51,7 @@ const PrivacyPolicyPage = () => {
         Pour toute question concernant cette politique de confidentialité, veuillez nous contacter à l’adresse suivante :
       </p>
       <p className="mb-4">
-        📧 paroissenavarrenx64@gmail.com
+        📧 dalemale09@gmail.com
       </p>
     </div>
   );
