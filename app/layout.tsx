@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   authors: [{ name: "BibleEnMain", url: "https://livrebiblique.vercel.app/" }],
   openGraph: {
     title: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
-    description: "Plongez dans les Écrist des Pères de l'Église avec des résumés et explications détaillées.",
+    description: "Plongez dans les Ecrits des Pères de l'Église avec des résumés et explications détaillées.",
     url: "https://livrebiblique.vercel.app/",
     siteName: "BibleEnMain",
     images: [
