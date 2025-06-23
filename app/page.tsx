@@ -29,9 +29,9 @@ const categoriesData: Category[] = [
   { id: 2, name: "Apologistes" },
   { id: 3, name: "Grecs" },
   { id: 4, name: "Latins" },
-  { id: 5, name: "Désert" },
-  { id: 6, name: "Docteurs" },
-  { id: 7, name: "Autres" },
+  { id: 5, name: "Mystiques" },
+  { id: 6, name: "Médiévaux" },
+  { id: 7, name: "Contemporains" },
   
 
 ];
