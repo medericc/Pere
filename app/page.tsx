@@ -27,11 +27,11 @@ interface Category {
 const categoriesData: Category[] = [
   { id: 1, name: "Apostoliques" },
   { id: 2, name: "Apologistes" },
-  { id: 3, name: "Grecs" },
-  { id: 4, name: "Latins" },
-  { id: 5, name: "Mystiques" },
-  { id: 6, name: "Médiévaux" },
-  { id: 7, name: "Contemporains" },
+  { id: 3, name: "Antiquités" },
+  { id: 7, name: "Mystiques" },
+  { id: 4, name: "Médiévaux" },
+  { id: 5, name: "Contemporains" },
+  { id: 6, name: "Modernes" },
   
 
 ];
