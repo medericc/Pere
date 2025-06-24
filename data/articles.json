@@ -518,8 +518,17 @@
     "published_at": "1994-01-01T00:00:00.000Z",
     "link": "https://www.academia.edu/46990893/Joseph_Ratzinger_Beno%C3%AEt_XVI_J%C3%A9sus_de_Nazareth_Deuxi%C3%A8me_partie_De_lentr%C3%A9e_%C3%A0_J%C3%A9rusalem_%C3%A0_la_R%C3%A9surrection"
   },
- 
-  
+  {
+    "id": 53,
+    "title": "Chemin de perfection – Thérèse d'Avila",
+    "content": "Sainte Thérèse écrit pour guider ses sœurs vers l’union avec Dieu, dans l’humilité, la simplicité du cœur, et la prière, car rien ne peut se faire sans la grâce divine. L’humilité véritable, loin d’être une posture extérieure, est une adhésion à la vérité. Il ne s’agit pas de fuir le monde, mais de se détacher des désirs personnels et d’aimer en vérité, en évitant les critiques, la jalousie, et en vivant une charité mutuelle authentique. Les épreuves purifient l’âme, et le Christ crucifié est le modèle de cette voie. La prière mentale, simple et intérieure, consiste à parler à Dieu avec le cœur, avec peu de pensées mais beaucoup d’amour. Il faut persévérer, être patient avec soi-même, et éviter les pièges comme le découragement, l’orgueil spirituel, ou le désir de contrôler Dieu. Le recueillement intérieur permet de découvrir l’âme comme un petit paradis où Dieu habite, accessible dans le silence. Prier demande humilité, fidélité, amour désintéressé : il ne faut pas chercher des consolations, mais faire la volonté de Dieu, l’aimer pour lui-même, non pour ses dons. La volonté doit primer sur les émotions, et la fidélité dans la sécheresse est la vraie preuve d’amour. Ce n’est pas l’extase, mais l’humilité, la paix et la charité qui révèlent une âme visitée par Dieu. La sainteté ne se mesure pas à l’apparence, mais à la fidélité quotidienne. Une âme unie à Dieu devient plus active, plus utile, rayonnante. La grâce mystique n’est pas le but, mais une conséquence possible d’une vie abandonnée à Dieu, marquée par le don de soi, le refus de se replier, et le zèle pour l’Église. La prière véritable accroît l’amour, le désir de sauver les âmes et de servir. Elle insiste sur la vérité : ne pas flatter ni laisser autrui dans l’erreur. Il vaut mieux ne pas prier que de prier sans vouloir faire la volonté de Dieu. En méditant le Notre Père, elle enseigne une prière confiante et respectueuse, fondée sur la chasteté, l’humilité, le détachement du monde. Dire « Notre Père » c’est reconnaître Dieu comme source d’amour et les autres comme frères. Demander que son nom soit sanctifié, c’est chercher à glorifier Dieu par sa vie. Demander que son règne vienne, c’est aspirer à sa présence. Accepter de faire sa volonté sur la terre comme au ciel, c’est accueillir la croix avec amour. Le vrai pardon libère, et la tentation révèle les tiédeurs de l’âme ; elle appelle à la vérité intérieure et à la réconciliation pour pouvoir aimer pleinement Dieu. Une âme qui persévère, même sans grâce sensible, est guidée vers l’union divine : aimer, se donner, persévérer, prier et se laisser conduire par Dieu, tel est le véritable chemin de perfection.",
+    "image_path": "https://medias.histoire-et-civilisations.com/api/v1/images/view/63bc3f547c10c21b7802a87a/width_1000/image.jpg",
+    "category_id": 7,
+    "author_username": "Thérèse d'Avila",
+    "published_at": "1566-01-01T00:00:00.000Z",
+    "link": "/perfection.pdf"
+  }
+  ,
   {
     "id": 54,
     "title": "Château Intérieur – Thérèse d'Avila",
@@ -658,14 +667,5 @@
     "author_username": "Benoît XVI",
     "published_at": "2000-01-01T00:00:00.000Z",
     "link": "https://numerique.lalibrairie.com/1550184/l-esprit-de-la-liturgie.ebook"
-  } , {
-    "id": 53,
-    "title": "Chemin de perfection – Thérèse d'Avila",
-    "content": "Sainte Thérèse écrit pour guider ses sœurs vers l’union avec Dieu, dans l’humilité, la simplicité du cœur, et la prière, car rien ne peut se faire sans la grâce divine. L’humilité véritable, loin d’être une posture extérieure, est une adhésion à la vérité. Il ne s’agit pas de fuir le monde, mais de se détacher des désirs personnels et d’aimer en vérité, en évitant les critiques, la jalousie, et en vivant une charité mutuelle authentique. Les épreuves purifient l’âme, et le Christ crucifié est le modèle de cette voie. La prière mentale, simple et intérieure, consiste à parler à Dieu avec le cœur, avec peu de pensées mais beaucoup d’amour. Il faut persévérer, être patient avec soi-même, et éviter les pièges comme le découragement, l’orgueil spirituel, ou le désir de contrôler Dieu. Le recueillement intérieur permet de découvrir l’âme comme un petit paradis où Dieu habite, accessible dans le silence. Prier demande humilité, fidélité, amour désintéressé : il ne faut pas chercher des consolations, mais faire la volonté de Dieu, l’aimer pour lui-même, non pour ses dons. La volonté doit primer sur les émotions, et la fidélité dans la sécheresse est la vraie preuve d’amour. Ce n’est pas l’extase, mais l’humilité, la paix et la charité qui révèlent une âme visitée par Dieu. La sainteté ne se mesure pas à l’apparence, mais à la fidélité quotidienne. Une âme unie à Dieu devient plus active, plus utile, rayonnante. La grâce mystique n’est pas le but, mais une conséquence possible d’une vie abandonnée à Dieu, marquée par le don de soi, le refus de se replier, et le zèle pour l’Église. La prière véritable accroît l’amour, le désir de sauver les âmes et de servir. Elle insiste sur la vérité : ne pas flatter ni laisser autrui dans l’erreur. Il vaut mieux ne pas prier que de prier sans vouloir faire la volonté de Dieu. En méditant le Notre Père, elle enseigne une prière confiante et respectueuse, fondée sur la chasteté, l’humilité, le détachement du monde. Dire « Notre Père » c’est reconnaître Dieu comme source d’amour et les autres comme frères. Demander que son nom soit sanctifié, c’est chercher à glorifier Dieu par sa vie. Demander que son règne vienne, c’est aspirer à sa présence. Accepter de faire sa volonté sur la terre comme au ciel, c’est accueillir la croix avec amour. Le vrai pardon libère, et la tentation révèle les tiédeurs de l’âme ; elle appelle à la vérité intérieure et à la réconciliation pour pouvoir aimer pleinement Dieu. Une âme qui persévère, même sans grâce sensible, est guidée vers l’union divine : aimer, se donner, persévérer, prier et se laisser conduire par Dieu, tel est le véritable chemin de perfection.",
-    "image_path": "https://medias.histoire-et-civilisations.com/api/v1/images/view/63bc3f547c10c21b7802a87a/width_1000/image.jpg",
-    "category_id": 7,
-    "author_username": "Thérèse d'Avila",
-    "published_at": "1566-01-01T00:00:00.000Z",
-    "link": "/perfection.pdf"
-  }
+  } 
 ]
