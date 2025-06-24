@@ -9,21 +9,34 @@ const work_Sans = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
-  description: "Explorez les Écrits des Pères de l'Église en un seul endroit.",
-  keywords: ["Bible", "Saints", "Histoires Bibliques", "Religion", "Spiritualité"],
-  authors: [{ name: "BibleEnMain", url: "https://livrebiblique.vercel.app/" }],
+  title: "BibleEnMain – Pères de l'Église, Docteurs, Jean-Paul II, Benoît XVI",
+  description: "Accédez aux écrits des Pères de l'Église, aux textes des Docteurs de l'Église, à la pensée de Jean-Paul II et Benoît XVI, commentés et expliqués.",
+  keywords: [
+    "Pères de l'Église",
+    "Docteurs de l'Église",
+    "Jean-Paul II",
+    "Benoît XVI",
+    "Théologie",
+    "Spiritualité catholique",
+    "Écrits des pères",
+    "Encycliques",
+    "Foi chrétienne",
+    "Bible",
+    "Tradition chrétienne"
+  ],
+  authors: [{ name: "BibleEnMain", url: "https://www.sourcetheologique.com/" }],
   openGraph: {
-    title: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
-    description: "Plongez dans les Ecrits des Pères de l'Église avec des résumés et explications détaillées.",
-    url: "https://livrebiblique.vercel.app/",
+    title: "BibleEnMain – Trésor des Écrits Catholiques",
+    description: "Découvrez les trésors de la Tradition chrétienne : Pères de l'Église, Docteurs, papes modernes.",
+    url: "https://www.sourcetheologique.com/",
     siteName: "BibleEnMain",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://www.sourcetheologique.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
+        alt: "BibleEnMain – Écrits patristiques et contemporains",
+        type: "image/png",
       },
     ],
     type: "website",
@@ -32,9 +45,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@bibleenmain",
     creator: "@bibleenmain",
-    title: "BibleEnMain - Découvrez les Écrits des Pères de l'Église",
-    description: "Explorez les écris des Pères de l'Église en un seul endroit.",
-    images: ["/apple-touch-icon.png"],
+    title: "BibleEnMain – Textes de la Tradition chrétienne",
+    description: "Explorez les écrits patristiques, magistériels et spirituels de la tradition catholique.",
+    images: ["https://www.sourcetheologique.com/og-image.png"],
   },
   icons: {
     icon: "/favicon.ico",
@@ -43,9 +56,10 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   other: {
-    "google-adsense-account": "ca-pub-6915108633693700", // Ajout ici !
+    "google-adsense-account": "ca-pub-6915108633693700",
   },
 };
+
 
 export default function RootLayout({
   children,
