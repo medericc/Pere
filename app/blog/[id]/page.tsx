@@ -51,20 +51,23 @@ export default function ArticlePage() {
     <>
       <Header />
       <div className="px-5 md:px-20 my-10">
-        <div className="mb-10">
-          <Image
-            src={
-              article.image_path ||
-              "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&auto=format&fit=crop&w=2607&q=80"
-            }
-            alt={article.title}
-            width={1600}
-            height={900}
-            className="w-full h-auto rounded-lg object-cover"
-            priority
-          />
-        </div>
-        <h1 className="text-2xl md:text-4xl font-bold mb-4">{article.title}</h1>
+        <div className="mb-10 flex justify-center">
+  <div className="w-full md:max-w-3xl mx-auto">
+    <Image
+      src={
+        article.image_path ||
+        "https://images.unsplash.com/photo-1504805572947-34fad45aed93?ixlib=rb-4.0.3&auto=format&fit=crop&w=2607&q=80"
+      }
+      alt={article.title}
+      width={1600}
+      height={900}
+      className="w-full h-auto rounded-lg object-cover"
+      priority
+    />
+  </div>
+</div>
+
+        <h1 className="text-2xl md:text-4xl font-bold mb-4 text-center">{article.title}</h1>
         <p className="text-base md:text-lg">{article.content}</p>
         {article.link && (
           <div className="mt-6 flex justify-center">
